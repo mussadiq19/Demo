@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:sovai_db}
+    username: ${DB_USER:luffy}
+    password: ${DB_PASS:Plmoknijb@123}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+
+sovai:
+  api:
+    base-url: ${SOVAI_API_URL:https://api.openai.com/v1}
+    api-key: ${SOVAI_API_KEY:}
+    model: sovai-pro
+    timeout-seconds: 30
+
+jwt:
+  secret: ${JWT_SECRET:K9mX2vPqR8nLwYtJdCbUeZsAoFhGiMkNpQrSuVxWyHz3456789+/==}
+  expiration-ms: 86400000
+
+server:
+  port: 8080
+
+logging:
+  level:
+    root: DEBUG
+    com.example.sovaibackend: DEBUG
+

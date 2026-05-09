@@ -1,0 +1,8 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:sovai_db}
+    username: ${DB_USER:luffy}
+    password: ${DB_PASS:Plmoknijb@123}
+  jpa:
+    show-sql: true
+

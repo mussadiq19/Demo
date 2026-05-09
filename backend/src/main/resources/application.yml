@@ -1,0 +1,56 @@
+spring:
+  datasource:
+    url: jdbc:mariadb://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:sovai_db}
+    username: ${DB_USER:luffy}
+    password: ${DB_PASS:Plmoknijb@123}
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate.format_sql: true
+      hibernate.dialect: org.hibernate.dialect.MariaDBDialect
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baselineOnMigrate: true
+  threads:
+    virtual:
+      enabled: true
+
+sovai:
+  api:
+    base-url: ${SOVAI_API_URL:https://api.sovai.example}
+    api-key: ${SOVAI_API_KEY:}
+    model: sovai-pro
+    timeout-seconds: 30
+
+jwt:
+  secret: ${JWT_SECRET:change_me_to_a_very_long_secret_string}
+  expiration-ms: 86400000
+
+quartz:
+  risk-scan-cron: "0 0 */6 * * ?"
+  skills-analysis-cron: "0 0 9 ? * MON"
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+

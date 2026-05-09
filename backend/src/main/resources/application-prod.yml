@@ -1,0 +1,27 @@
+spring:
+  jpa:
+    show-sql: false
+  datasource:
+    url: jdbc:mariadb://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:sovai_db}
+    username: ${DB_USER:prod}
+    password: ${DB_PASS:prodpass}
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+
+sovai:
+  api:
+    base-url: ${SOVAI_API_URL:https://api.sovai.example}
+    api-key: ${SOVAI_API_KEY:}
+    model: sovai-pro
+    timeout-seconds: 30
+
+jwt:
+  secret: ${JWT_SECRET:change_me_to_a_very_long_secret_string}
+  expiration-ms: 86400000
+
+logging:
+  level:
+    root: INFO
+

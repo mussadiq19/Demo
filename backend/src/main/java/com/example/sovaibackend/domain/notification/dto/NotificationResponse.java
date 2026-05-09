@@ -1,4 +1,4 @@
-package com.sovai.platform.domain.notification.dto;
+package com.example.sovaibackend.domain.notification.dto;
 
 import java.time.Instant;
 

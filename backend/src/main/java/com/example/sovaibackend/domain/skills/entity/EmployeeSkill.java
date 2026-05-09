@@ -1,4 +1,4 @@
-package com.sovai.platform.domain.skills.entity;
+package com.example.sovaibackend.domain.skills.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -1,4 +1,4 @@
-package com.sovai.platform.domain.risk.dto;
+package com.example.sovaibackend.domain.risk.dto;
 
 import java.util.List;
 

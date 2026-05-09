@@ -1,4 +1,4 @@
-package com.sovai.platform.domain.auth.dto;
+package com.example.sovaibackend.domain.auth.dto;
 
 public record AuthResponse(
     String token,

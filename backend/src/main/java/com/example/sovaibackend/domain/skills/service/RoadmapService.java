@@ -1,6 +1,6 @@
-package com.sovai.platform.domain.skills.service;
+package com.example.sovaibackend.domain.skills.service;
 
-import com.sovai.platform.domain.skills.dto.RoadmapResponse;
+import com.example.sovaibackend.domain.skills.dto.RoadmapResponse;
 
 public interface RoadmapService {
     RoadmapResponse generate(Long userId);

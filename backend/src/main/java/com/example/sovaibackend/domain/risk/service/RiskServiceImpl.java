@@ -1,14 +1,14 @@
-package com.sovai.platform.domain.risk.service;
+package com.example.sovaibackend.domain.risk.service;
 
-import com.sovai.platform.common.exception.ResourceNotFoundException;
-import com.sovai.platform.common.response.PagedResponse;
-import com.sovai.platform.domain.risk.dto.RiskRequest;
-import com.sovai.platform.domain.risk.dto.RiskResponse;
-import com.sovai.platform.domain.risk.entity.Risk;
-import com.sovai.platform.domain.risk.entity.RiskSeverity;
-import com.sovai.platform.domain.risk.entity.RiskStatus;
-import com.sovai.platform.domain.risk.mapper.RiskMapper;
-import com.sovai.platform.domain.risk.repository.RiskRepository;
+import com.example.sovaibackend.common.exception.ResourceNotFoundException;
+import com.example.sovaibackend.common.response.PagedResponse;
+import com.example.sovaibackend.domain.risk.dto.RiskRequest;
+import com.example.sovaibackend.domain.risk.dto.RiskResponse;
+import com.example.sovaibackend.domain.risk.entity.Risk;
+import com.example.sovaibackend.domain.risk.entity.RiskSeverity;
+import com.example.sovaibackend.domain.risk.entity.RiskStatus;
+import com.example.sovaibackend.domain.risk.mapper.RiskMapper;
+import com.example.sovaibackend.domain.risk.repository.RiskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;

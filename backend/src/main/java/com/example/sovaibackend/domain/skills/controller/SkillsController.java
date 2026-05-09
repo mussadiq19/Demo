@@ -1,10 +1,10 @@
-package com.sovai.platform.domain.skills.controller;
+package com.example.sovaibackend.domain.skills.controller;
 
-import com.sovai.platform.common.response.ApiResponse;
-import com.sovai.platform.domain.skills.dto.GapAnalysisResponse;
-import com.sovai.platform.domain.skills.dto.SkillUploadRequest;
-import com.sovai.platform.domain.skills.service.SkillsAnalysisJobService;
-import com.sovai.platform.domain.skills.service.SkillsService;
+import com.example.sovaibackend.common.response.ApiResponse;
+import com.example.sovaibackend.domain.skills.dto.GapAnalysisResponse;
+import com.example.sovaibackend.domain.skills.dto.SkillUploadRequest;
+import com.example.sovaibackend.domain.skills.service.SkillsAnalysisJobService;
+import com.example.sovaibackend.domain.skills.service.SkillsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

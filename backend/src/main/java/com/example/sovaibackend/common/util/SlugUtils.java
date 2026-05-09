@@ -1,4 +1,4 @@
-package com.sovai.platform.common.util;
+package com.example.sovaibackend.common.util;
 
 import java.text.Normalizer;
 import java.util.Locale;

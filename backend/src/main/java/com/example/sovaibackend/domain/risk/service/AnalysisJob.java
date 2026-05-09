@@ -1,4 +1,4 @@
-package com.sovai.platform.domain.risk.service;
+package com.example.sovaibackend.domain.risk.service;
 
 public interface AnalysisJob {
     void run(Long companyId);

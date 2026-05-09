@@ -1,7 +1,7 @@
-package com.sovai.platform.domain.company.service;
+package com.example.sovaibackend.domain.company.service;
 
-import com.sovai.platform.domain.company.dto.CompanyRequest;
-import com.sovai.platform.domain.company.dto.CompanyResponse;
+import com.example.sovaibackend.domain.company.dto.CompanyRequest;
+import com.example.sovaibackend.domain.company.dto.CompanyResponse;
 
 import java.util.Map;
 

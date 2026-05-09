@@ -1,4 +1,4 @@
-package com.sovai.platform.common.util;
+package com.example.sovaibackend.common.util;
 
 import java.time.Instant;
 import java.time.LocalDate;

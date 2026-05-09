@@ -1,4 +1,4 @@
-package com.sovai.platform.infrastructure.ai;
+package com.example.sovaibackend.infrastructure.ai;
 
 public record AiResponse(
     String content,

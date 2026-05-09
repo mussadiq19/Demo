@@ -1,7 +1,7 @@
-package com.sovai.platform.domain.risk.mapper;
+package com.example.sovaibackend.domain.risk.mapper;
 
-import com.sovai.platform.domain.risk.dto.RiskResponse;
-import com.sovai.platform.domain.risk.entity.Risk;
+import com.example.sovaibackend.domain.risk.dto.RiskResponse;
+import com.example.sovaibackend.domain.risk.entity.Risk;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

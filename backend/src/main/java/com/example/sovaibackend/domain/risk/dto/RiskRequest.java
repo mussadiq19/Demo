@@ -1,6 +1,6 @@
-package com.sovai.platform.domain.risk.dto;
+package com.example.sovaibackend.domain.risk.dto;
 
-import com.sovai.platform.domain.risk.entity.RiskSeverity;
+import com.example.sovaibackend.domain.risk.entity.RiskSeverity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 

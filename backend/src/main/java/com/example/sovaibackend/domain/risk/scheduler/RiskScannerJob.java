@@ -1,6 +1,6 @@
-package com.sovai.platform.domain.risk.scheduler;
+package com.example.sovaibackend.domain.risk.scheduler;
 
-import com.sovai.platform.domain.risk.service.RiskScannerJobService;
+import com.example.sovaibackend.domain.risk.service.RiskScannerJobService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;

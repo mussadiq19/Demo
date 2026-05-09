@@ -1,6 +1,6 @@
-package com.sovai.platform.domain.skills.scheduler;
+package com.example.sovaibackend.domain.skills.scheduler;
 
-import com.sovai.platform.domain.skills.service.SkillsAnalysisJobService;
+import com.example.sovaibackend.domain.skills.service.SkillsAnalysisJobService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;

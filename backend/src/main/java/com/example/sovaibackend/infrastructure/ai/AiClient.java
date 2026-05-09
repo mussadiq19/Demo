@@ -1,6 +1,6 @@
-package com.sovai.platform.infrastructure.ai;
+package com.example.sovaibackend.infrastructure.ai;
 
-import com.sovai.platform.common.exception.SovAIAdapterException;
+import com.example.sovaibackend.common.exception.SovAIAdapterException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatusCode;
@@ -17,7 +17,7 @@ public class AiClient {
 
     private final WebClient aiWebClient;
 
-    public com.sovai.platform.infrastructure.ai.AiResponse complete(AiRequest request) {
+    public com.example.sovaibackend.infrastructure.ai.AiResponse complete(AiRequest request) {
         try {
             log.debug("Calling AI API with model: {}", request.model());
 

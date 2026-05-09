@@ -1,6 +1,6 @@
-package com.sovai.platform.domain.risk.entity;
+package com.example.sovaibackend.domain.risk.entity;
 
-import com.sovai.platform.common.audit.Auditable;
+import com.example.sovaibackend.common.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;

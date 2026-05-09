@@ -1,6 +1,6 @@
-package com.sovai.platform.config;
+package com.example.sovaibackend.config;
 
-import com.sovai.platform.common.security.JwtAuthenticationFilter;
+import com.example.sovaibackend.common.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

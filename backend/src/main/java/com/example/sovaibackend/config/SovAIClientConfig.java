@@ -1,4 +1,4 @@
-package com.sovai.platform.config;
+package com.example.sovaibackend.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

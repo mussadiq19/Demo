@@ -1,7 +1,7 @@
-package com.sovai.platform.domain.risk.dto;
+package com.example.sovaibackend.domain.risk.dto;
 
-import com.sovai.platform.domain.risk.entity.RiskSeverity;
-import com.sovai.platform.domain.risk.entity.RiskStatus;
+import com.example.sovaibackend.domain.risk.entity.RiskSeverity;
+import com.example.sovaibackend.domain.risk.entity.RiskStatus;
 
 import java.math.BigDecimal;
 import java.time.Instant;

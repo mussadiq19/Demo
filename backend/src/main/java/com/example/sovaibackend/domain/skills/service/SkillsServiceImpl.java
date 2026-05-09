@@ -1,14 +1,14 @@
-package com.sovai.platform.domain.skills.service;
+package com.example.sovaibackend.domain.skills.service;
 
-import com.sovai.platform.domain.auth.entity.User;
-import com.sovai.platform.domain.auth.repository.UserRepository;
-import com.sovai.platform.domain.skills.dto.GapAnalysisResponse;
-import com.sovai.platform.domain.skills.dto.SkillUploadRequest;
-import com.sovai.platform.domain.skills.entity.EmployeeSkill;
-import com.sovai.platform.domain.skills.entity.ProficiencyLevel;
-import com.sovai.platform.domain.skills.entity.Skill;
-import com.sovai.platform.domain.skills.repository.EmployeeSkillRepository;
-import com.sovai.platform.domain.skills.repository.SkillRepository;
+import com.example.sovaibackend.domain.auth.entity.User;
+import com.example.sovaibackend.domain.auth.repository.UserRepository;
+import com.example.sovaibackend.domain.skills.dto.GapAnalysisResponse;
+import com.example.sovaibackend.domain.skills.dto.SkillUploadRequest;
+import com.example.sovaibackend.domain.skills.entity.EmployeeSkill;
+import com.example.sovaibackend.domain.skills.entity.ProficiencyLevel;
+import com.example.sovaibackend.domain.skills.entity.Skill;
+import com.example.sovaibackend.domain.skills.repository.EmployeeSkillRepository;
+import com.example.sovaibackend.domain.skills.repository.SkillRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

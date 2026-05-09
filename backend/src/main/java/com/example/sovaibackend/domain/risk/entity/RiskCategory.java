@@ -1,4 +1,4 @@
-package com.sovai.platform.domain.risk.entity;
+package com.example.sovaibackend.domain.risk.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

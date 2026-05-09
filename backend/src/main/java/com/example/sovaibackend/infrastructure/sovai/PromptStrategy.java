@@ -1,6 +1,6 @@
-package com.sovai.platform.infrastructure.sovai;
+package com.example.sovaibackend.infrastructure.sovai;
 
 public interface PromptStrategy<T> {
-    com.sovai.platform.infrastructure.sovai.SovAIRequest build(T input);
+    com.example.sovaibackend.infrastructure.sovai.SovAIRequest build(T input);
 }
 

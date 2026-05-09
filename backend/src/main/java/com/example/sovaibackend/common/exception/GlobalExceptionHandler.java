@@ -1,6 +1,6 @@
-package com.sovai.platform.common.exception;
+package com.example.sovaibackend.common.exception;
 
-import com.sovai.platform.common.response.ApiResponse;
+import com.example.sovaibackend.common.response.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

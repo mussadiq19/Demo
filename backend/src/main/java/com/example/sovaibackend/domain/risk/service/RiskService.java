@@ -1,10 +1,10 @@
-package com.sovai.platform.domain.risk.service;
+package com.example.sovaibackend.domain.risk.service;
 
-import com.sovai.platform.common.response.PagedResponse;
-import com.sovai.platform.domain.risk.dto.RiskRequest;
-import com.sovai.platform.domain.risk.dto.RiskResponse;
-import com.sovai.platform.domain.risk.entity.RiskSeverity;
-import com.sovai.platform.domain.risk.entity.RiskStatus;
+import com.example.sovaibackend.common.response.PagedResponse;
+import com.example.sovaibackend.domain.risk.dto.RiskRequest;
+import com.example.sovaibackend.domain.risk.dto.RiskResponse;
+import com.example.sovaibackend.domain.risk.entity.RiskSeverity;
+import com.example.sovaibackend.domain.risk.entity.RiskStatus;
 
 import java.util.Map;
 

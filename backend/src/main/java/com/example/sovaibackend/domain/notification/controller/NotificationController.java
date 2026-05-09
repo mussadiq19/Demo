@@ -1,9 +1,9 @@
-package com.sovai.platform.domain.notification.controller;
+package com.example.sovaibackend.domain.notification.controller;
 
-import com.sovai.platform.common.response.ApiResponse;
-import com.sovai.platform.common.response.PagedResponse;
-import com.sovai.platform.domain.notification.dto.NotificationResponse;
-import com.sovai.platform.domain.notification.service.NotificationService;
+import com.example.sovaibackend.common.response.ApiResponse;
+import com.example.sovaibackend.common.response.PagedResponse;
+import com.example.sovaibackend.domain.notification.dto.NotificationResponse;
+import com.example.sovaibackend.domain.notification.service.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

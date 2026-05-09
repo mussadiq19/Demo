@@ -1,7 +1,7 @@
-package com.sovai.platform.infrastructure.sovai.prompt;
+package com.example.sovaibackend.infrastructure.sovai.prompt;
 
-import com.sovai.platform.domain.company.entity.Company;
-import com.sovai.platform.infrastructure.ai.AiRequest;
+import com.example.sovaibackend.domain.company.entity.Company;
+import com.example.sovaibackend.infrastructure.ai.AiRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

@@ -1,7 +1,7 @@
-package com.sovai.platform.domain.skills.service;
+package com.example.sovaibackend.domain.skills.service;
 
-import com.sovai.platform.domain.skills.dto.GapAnalysisResponse;
-import com.sovai.platform.domain.skills.dto.SkillUploadRequest;
+import com.example.sovaibackend.domain.skills.dto.GapAnalysisResponse;
+import com.example.sovaibackend.domain.skills.dto.SkillUploadRequest;
 
 import java.util.List;
 

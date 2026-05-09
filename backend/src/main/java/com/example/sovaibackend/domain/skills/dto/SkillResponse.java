@@ -1,4 +1,4 @@
-package com.sovai.platform.domain.skills.dto;
+package com.example.sovaibackend.domain.skills.dto;
 
 public record SkillResponse(
     Long id,

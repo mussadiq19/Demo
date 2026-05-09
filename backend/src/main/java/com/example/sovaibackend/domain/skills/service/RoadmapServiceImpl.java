@@ -1,15 +1,15 @@
-package com.sovai.platform.domain.skills.service;
+package com.example.sovaibackend.domain.skills.service;
 
-import com.sovai.platform.common.exception.ResourceNotFoundException;
-import com.sovai.platform.domain.auth.repository.UserRepository;
-import com.sovai.platform.domain.skills.dto.RoadmapResponse;
-import com.sovai.platform.domain.skills.entity.Roadmap;
-import com.sovai.platform.domain.skills.entity.RoadmapStep;
-import com.sovai.platform.domain.skills.repository.EmployeeSkillRepository;
-import com.sovai.platform.domain.skills.repository.RoadmapRepository;
-import com.sovai.platform.domain.skills.repository.RoadmapStepRepository;
-import com.sovai.platform.infrastructure.ai.AiClient;
-import com.sovai.platform.infrastructure.sovai.prompt.SkillsGapPromptBuilder;
+import com.example.sovaibackend.common.exception.ResourceNotFoundException;
+import com.example.sovaibackend.domain.auth.repository.UserRepository;
+import com.example.sovaibackend.domain.skills.dto.RoadmapResponse;
+import com.example.sovaibackend.domain.skills.entity.Roadmap;
+import com.example.sovaibackend.domain.skills.entity.RoadmapStep;
+import com.example.sovaibackend.domain.skills.repository.EmployeeSkillRepository;
+import com.example.sovaibackend.domain.skills.repository.RoadmapRepository;
+import com.example.sovaibackend.domain.skills.repository.RoadmapStepRepository;
+import com.example.sovaibackend.infrastructure.ai.AiClient;
+import com.example.sovaibackend.infrastructure.sovai.prompt.SkillsGapPromptBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

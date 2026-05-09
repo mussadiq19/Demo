@@ -1,4 +1,4 @@
-package com.sovai.platform.domain.risk.entity;
+package com.example.sovaibackend.domain.risk.entity;
 
 public enum RiskStatus {
     OPEN,

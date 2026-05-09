@@ -1,9 +1,9 @@
-package com.sovai.platform.domain.company.controller;
+package com.example.sovaibackend.domain.company.controller;
 
-import com.sovai.platform.common.response.ApiResponse;
-import com.sovai.platform.domain.company.dto.CompanyRequest;
-import com.sovai.platform.domain.company.dto.CompanyResponse;
-import com.sovai.platform.domain.company.service.CompanyService;
+import com.example.sovaibackend.common.response.ApiResponse;
+import com.example.sovaibackend.domain.company.dto.CompanyRequest;
+import com.example.sovaibackend.domain.company.dto.CompanyResponse;
+import com.example.sovaibackend.domain.company.service.CompanyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

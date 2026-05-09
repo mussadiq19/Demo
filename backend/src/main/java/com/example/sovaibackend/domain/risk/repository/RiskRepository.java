@@ -1,8 +1,8 @@
-package com.sovai.platform.domain.risk.repository;
+package com.example.sovaibackend.domain.risk.repository;
 
-import com.sovai.platform.domain.risk.entity.Risk;
-import com.sovai.platform.domain.risk.entity.RiskSeverity;
-import com.sovai.platform.domain.risk.entity.RiskStatus;
+import com.example.sovaibackend.domain.risk.entity.Risk;
+import com.example.sovaibackend.domain.risk.entity.RiskSeverity;
+import com.example.sovaibackend.domain.risk.entity.RiskStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

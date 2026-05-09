@@ -1,4 +1,4 @@
-package com.sovai.platform.common.exception;
+package com.example.sovaibackend.common.exception;
 
 public class SovAIAdapterException extends RuntimeException {
     public SovAIAdapterException(String message) {

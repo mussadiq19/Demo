@@ -1,14 +1,13 @@
-package com.sovai.platform.config;
+package com.example.sovaibackend.config;
 
-import com.sovai.platform.domain.risk.scheduler.RiskScannerJob;
-import com.sovai.platform.domain.skills.scheduler.SkillsAnalysisJob;
+import com.example.sovaibackend.domain.risk.scheduler.RiskScannerJob;
+import com.example.sovaibackend.domain.skills.scheduler.SkillsAnalysisJob;
 import org.quartz.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
-import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
@@ -21,9 +20,8 @@ public class QuartzConfig {
     private String skillsAnalysisCron;
 
     @Bean
-    public SchedulerFactoryBean schedulerFactoryBean(DataSource dataSource) {
+    public SchedulerFactoryBean schedulerFactoryBean() {
         SchedulerFactoryBean schedulerFactoryBean = new SchedulerFactoryBean();
-        schedulerFactoryBean.setDataSource(dataSource);
         schedulerFactoryBean.setQuartzProperties(quartzProperties());
         schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(true);
         schedulerFactoryBean.setOverwriteExistingJobs(true);
@@ -70,10 +68,7 @@ public class QuartzConfig {
         Properties properties = new Properties();
         properties.setProperty("org.quartz.scheduler.instanceName", "SovaiScheduler");
         properties.setProperty("org.quartz.scheduler.instanceId", "AUTO");
-        properties.setProperty("org.quartz.jobStore.class", "org.quartz.impl.jdbcjobstore.JobStoreTX");
-        properties.setProperty("org.quartz.jobStore.driverDelegateClass", "org.quartz.impl.jdbcjobstore.StdJDBCDelegate");
-        properties.setProperty("org.quartz.jobStore.tablePrefix", "QRTZ_");
-        properties.setProperty("org.quartz.jobStore.useProperties", "false");
+        properties.setProperty("org.quartz.jobStore.class", "org.quartz.simpl.RAMJobStore");
         properties.setProperty("org.quartz.threadPool.class", "org.quartz.simpl.SimpleThreadPool");
         properties.setProperty("org.quartz.threadPool.threadCount", "10");
         return properties;

@@ -1,4 +1,4 @@
-package com.sovai.platform.common.security;
+package com.example.sovaibackend.common.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

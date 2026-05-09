@@ -1,4 +1,4 @@
-package com.sovai.platform.infrastructure.external;
+package com.example.sovaibackend.infrastructure.external;
 
 import org.springframework.stereotype.Component;
 

@@ -1,6 +1,6 @@
-package com.sovai.platform.domain.auth.repository;
+package com.example.sovaibackend.domain.auth.repository;
 
-import com.sovai.platform.domain.auth.entity.User;
+import com.example.sovaibackend.domain.auth.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

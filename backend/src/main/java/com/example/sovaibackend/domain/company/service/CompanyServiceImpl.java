@@ -1,13 +1,13 @@
-package com.sovai.platform.domain.company.service;
+package com.example.sovaibackend.domain.company.service;
 
-import com.sovai.platform.common.exception.ResourceNotFoundException;
-import com.sovai.platform.domain.company.dto.CompanyRequest;
-import com.sovai.platform.domain.company.dto.CompanyResponse;
-import com.sovai.platform.domain.company.entity.Company;
-import com.sovai.platform.domain.company.repository.CompanyRepository;
-import com.sovai.platform.domain.risk.entity.RiskStatus;
-import com.sovai.platform.domain.risk.repository.RiskRepository;
-import com.sovai.platform.domain.skills.repository.EmployeeSkillRepository;
+import com.example.sovaibackend.common.exception.ResourceNotFoundException;
+import com.example.sovaibackend.domain.company.dto.CompanyRequest;
+import com.example.sovaibackend.domain.company.dto.CompanyResponse;
+import com.example.sovaibackend.domain.company.entity.Company;
+import com.example.sovaibackend.domain.company.repository.CompanyRepository;
+import com.example.sovaibackend.domain.risk.entity.RiskStatus;
+import com.example.sovaibackend.domain.risk.repository.RiskRepository;
+import com.example.sovaibackend.domain.skills.repository.EmployeeSkillRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

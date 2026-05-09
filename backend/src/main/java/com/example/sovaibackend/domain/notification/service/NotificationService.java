@@ -1,7 +1,7 @@
-package com.sovai.platform.domain.notification.service;
+package com.example.sovaibackend.domain.notification.service;
 
-import com.sovai.platform.common.response.PagedResponse;
-import com.sovai.platform.domain.notification.dto.NotificationResponse;
+import com.example.sovaibackend.common.response.PagedResponse;
+import com.example.sovaibackend.domain.notification.dto.NotificationResponse;
 
 public interface NotificationService {
     PagedResponse<NotificationResponse> list(Long userId, int page, int size);

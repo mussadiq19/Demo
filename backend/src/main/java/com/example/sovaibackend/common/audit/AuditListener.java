@@ -1,8 +1,10 @@
-package com.sovai.platform.common.audit;
+package com.example.sovaibackend.common.audit;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class AuditListener {
 
     public void logStart(String jobName, Long companyId) {

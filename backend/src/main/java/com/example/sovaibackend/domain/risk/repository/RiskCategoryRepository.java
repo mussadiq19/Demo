@@ -1,6 +1,6 @@
-package com.sovai.platform.domain.risk.repository;
+package com.example.sovaibackend.domain.risk.repository;
 
-import com.sovai.platform.domain.risk.entity.RiskCategory;
+import com.example.sovaibackend.domain.risk.entity.RiskCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

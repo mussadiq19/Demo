@@ -1,4 +1,4 @@
-package com.sovai.platform.config;
+package com.example.sovaibackend.config;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,11 +1,11 @@
-package com.sovai.platform.domain.notification.service;
+package com.example.sovaibackend.domain.notification.service;
 
-import com.sovai.platform.common.exception.ResourceNotFoundException;
-import com.sovai.platform.common.response.PagedResponse;
-import com.sovai.platform.domain.notification.dto.NotificationResponse;
-import com.sovai.platform.domain.notification.entity.Notification;
-import com.sovai.platform.domain.notification.mapper.NotificationMapper;
-import com.sovai.platform.domain.notification.repository.NotificationRepository;
+import com.example.sovaibackend.common.exception.ResourceNotFoundException;
+import com.example.sovaibackend.common.response.PagedResponse;
+import com.example.sovaibackend.domain.notification.dto.NotificationResponse;
+import com.example.sovaibackend.domain.notification.entity.Notification;
+import com.example.sovaibackend.domain.notification.mapper.NotificationMapper;
+import com.example.sovaibackend.domain.notification.repository.NotificationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.sovai.platform.config;
+package com.example.sovaibackend.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;

@@ -1,7 +1,7 @@
-package com.sovai.platform.domain.notification.mapper;
+package com.example.sovaibackend.domain.notification.mapper;
 
-import com.sovai.platform.domain.notification.dto.NotificationResponse;
-import com.sovai.platform.domain.notification.entity.Notification;
+import com.example.sovaibackend.domain.notification.dto.NotificationResponse;
+import com.example.sovaibackend.domain.notification.entity.Notification;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

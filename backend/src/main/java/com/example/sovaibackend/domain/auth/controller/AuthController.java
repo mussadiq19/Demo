@@ -1,10 +1,10 @@
-package com.sovai.platform.domain.auth.controller;
+package com.example.sovaibackend.domain.auth.controller;
 
-import com.sovai.platform.common.response.ApiResponse;
-import com.sovai.platform.domain.auth.dto.AuthResponse;
-import com.sovai.platform.domain.auth.dto.LoginRequest;
-import com.sovai.platform.domain.auth.dto.RegisterRequest;
-import com.sovai.platform.domain.auth.service.AuthService;
+import com.example.sovaibackend.common.response.ApiResponse;
+import com.example.sovaibackend.domain.auth.dto.AuthResponse;
+import com.example.sovaibackend.domain.auth.dto.LoginRequest;
+import com.example.sovaibackend.domain.auth.dto.RegisterRequest;
+import com.example.sovaibackend.domain.auth.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

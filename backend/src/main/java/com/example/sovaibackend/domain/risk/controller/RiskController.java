@@ -1,13 +1,13 @@
-package com.sovai.platform.domain.risk.controller;
+package com.example.sovaibackend.domain.risk.controller;
 
-import com.sovai.platform.common.response.ApiResponse;
-import com.sovai.platform.common.response.PagedResponse;
-import com.sovai.platform.domain.risk.dto.RiskResponse;
-import com.sovai.platform.domain.risk.dto.RiskScanResult;
-import com.sovai.platform.domain.risk.entity.RiskSeverity;
-import com.sovai.platform.domain.risk.entity.RiskStatus;
-import com.sovai.platform.domain.risk.service.RiskScannerJobService;
-import com.sovai.platform.domain.risk.service.RiskService;
+import com.example.sovaibackend.common.response.ApiResponse;
+import com.example.sovaibackend.common.response.PagedResponse;
+import com.example.sovaibackend.domain.risk.dto.RiskResponse;
+import com.example.sovaibackend.domain.risk.dto.RiskScanResult;
+import com.example.sovaibackend.domain.risk.entity.RiskSeverity;
+import com.example.sovaibackend.domain.risk.entity.RiskStatus;
+import com.example.sovaibackend.domain.risk.service.RiskScannerJobService;
+import com.example.sovaibackend.domain.risk.service.RiskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,6 @@
-package com.sovai.platform.infrastructure.sovai;
+package com.example.sovaibackend.infrastructure.sovai;
 
-import com.sovai.platform.common.exception.SovAIAdapterException;
+import com.example.sovaibackend.common.exception.SovAIAdapterException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -26,7 +26,7 @@ public class SovAIClient {
     @Value("${sovai.api.timeout-seconds:30}")
     private int timeoutSeconds;
 
-    public com.sovai.platform.infrastructure.sovai.SovAIResponse complete(SovAIRequest request) {
+    public com.example.sovaibackend.infrastructure.sovai.SovAIResponse complete(SovAIRequest request) {
         try {
             Map<String, Object> payload = Map.of(
                     "model", request.model(),

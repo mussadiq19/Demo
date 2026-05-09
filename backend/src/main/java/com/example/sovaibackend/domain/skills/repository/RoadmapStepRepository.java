@@ -1,6 +1,6 @@
-package com.sovai.platform.domain.skills.repository;
+package com.example.sovaibackend.domain.skills.repository;
 
-import com.sovai.platform.domain.skills.entity.RoadmapStep;
+import com.example.sovaibackend.domain.skills.entity.RoadmapStep;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

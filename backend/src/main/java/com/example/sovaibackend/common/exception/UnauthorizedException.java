@@ -1,4 +1,4 @@
-package com.sovai.platform.common.exception;
+package com.example.sovaibackend.common.exception;
 
 public class UnauthorizedException extends RuntimeException {
     public UnauthorizedException(String message) {

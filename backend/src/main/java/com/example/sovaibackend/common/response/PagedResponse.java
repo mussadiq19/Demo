@@ -1,4 +1,4 @@
-package com.sovai.platform.common.response;
+package com.example.sovaibackend.common.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

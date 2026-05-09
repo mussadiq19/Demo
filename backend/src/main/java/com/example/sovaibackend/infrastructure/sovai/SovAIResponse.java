@@ -1,4 +1,4 @@
-package com.sovai.platform.infrastructure.sovai;
+package com.example.sovaibackend.infrastructure.sovai;
 
 public record SovAIResponse(
         String raw,

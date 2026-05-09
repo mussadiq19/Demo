@@ -1,6 +1,6 @@
-package com.sovai.platform.domain.notification.repository;
+package com.example.sovaibackend.domain.notification.repository;
 
-import com.sovai.platform.domain.notification.entity.Notification;
+import com.example.sovaibackend.domain.notification.entity.Notification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

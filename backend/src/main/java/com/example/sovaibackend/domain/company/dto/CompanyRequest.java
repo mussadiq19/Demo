@@ -1,4 +1,4 @@
-package com.sovai.platform.domain.company.dto;
+package com.example.sovaibackend.domain.company.dto;
 
 import jakarta.validation.constraints.NotBlank;
 

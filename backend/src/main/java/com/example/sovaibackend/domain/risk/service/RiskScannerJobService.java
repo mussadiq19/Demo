@@ -1,6 +1,6 @@
-package com.sovai.platform.domain.risk.service;
+package com.example.sovaibackend.domain.risk.service;
 
-import com.sovai.platform.domain.risk.dto.RiskScanResult;
+import com.example.sovaibackend.domain.risk.dto.RiskScanResult;
 
 public interface RiskScannerJobService {
     RiskScanResult runScan(Long companyId);

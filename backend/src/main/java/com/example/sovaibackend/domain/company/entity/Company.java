@@ -1,6 +1,6 @@
-package com.sovai.platform.domain.company.entity;
+package com.example.sovaibackend.domain.company.entity;
 
-import com.sovai.platform.common.audit.Auditable;
+import com.example.sovaibackend.common.audit.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
 

@@ -1,14 +1,14 @@
-package com.sovai.platform.domain.risk.service;
+package com.example.sovaibackend.domain.risk.service;
 
-import com.sovai.platform.common.audit.AuditListener;
-import com.sovai.platform.domain.company.entity.Company;
-import com.sovai.platform.domain.company.repository.CompanyRepository;
-import com.sovai.platform.domain.risk.dto.RiskResponse;
-import com.sovai.platform.domain.risk.dto.RiskScanResult;
-import com.sovai.platform.domain.risk.entity.RiskSeverity;
-import com.sovai.platform.domain.risk.dto.RiskRequest;
-import com.sovai.platform.infrastructure.ai.AiClient;
-import com.sovai.platform.infrastructure.sovai.prompt.RiskScanPromptBuilder;
+import com.example.sovaibackend.common.audit.AuditListener;
+import com.example.sovaibackend.domain.company.entity.Company;
+import com.example.sovaibackend.domain.company.repository.CompanyRepository;
+import com.example.sovaibackend.domain.risk.dto.RiskResponse;
+import com.example.sovaibackend.domain.risk.dto.RiskScanResult;
+import com.example.sovaibackend.domain.risk.entity.RiskSeverity;
+import com.example.sovaibackend.domain.risk.dto.RiskRequest;
+import com.example.sovaibackend.infrastructure.ai.AiClient;
+import com.example.sovaibackend.infrastructure.sovai.prompt.RiskScanPromptBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.sovai.platform.domain.auth.entity;
+package com.example.sovaibackend.domain.auth.entity;
 
 public enum Role {
     ADMIN,

@@ -1,9 +1,9 @@
-package com.sovai.platform.domain.skills.controller;
+package com.example.sovaibackend.domain.skills.controller;
 
-import com.sovai.platform.common.response.ApiResponse;
-import com.sovai.platform.common.security.UserPrincipal;
-import com.sovai.platform.domain.skills.dto.RoadmapResponse;
-import com.sovai.platform.domain.skills.service.RoadmapService;
+import com.example.sovaibackend.common.response.ApiResponse;
+import com.example.sovaibackend.common.security.UserPrincipal;
+import com.example.sovaibackend.domain.skills.dto.RoadmapResponse;
+import com.example.sovaibackend.domain.skills.service.RoadmapService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;

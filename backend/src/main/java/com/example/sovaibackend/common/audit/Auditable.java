@@ -1,4 +1,4 @@
-package com.sovai.platform.common.audit;
+package com.example.sovaibackend.common.audit;
 
 import jakarta.persistence.*;
 import lombok.Getter;

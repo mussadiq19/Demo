@@ -1,4 +1,4 @@
-package com.sovai.platform.config;
+package com.example.sovaibackend.config;
 
 import org.flywaydb.core.Flyway;
 import org.springframework.boot.flyway.autoconfigure.FlywayMigrationStrategy;

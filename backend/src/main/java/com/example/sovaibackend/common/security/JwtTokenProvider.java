@@ -1,4 +1,4 @@
-package com.sovai.platform.common.security;
+package com.example.sovaibackend.common.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -3,8 +3,8 @@ spring:
     show-sql: false
   datasource:
     url: jdbc:mariadb://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:sovai_db}
-    username: ${DB_USER:prod}
-    password: ${DB_PASS:prodpass}
+    username: ${DB_USER:luffy}
+    password: ${DB_PASS:Plmoknijb@123}
     driver-class-name: org.mariadb.jdbc.Driver
     hikari:
       maximum-pool-size: 20
@@ -12,13 +12,13 @@ spring:
 
 sovai:
   api:
-    base-url: ${SOVAI_API_URL:https://api.sovai.example}
-    api-key: ${SOVAI_API_KEY:}
+    base-url: ${SOVAI_API_URL:https://api.openai.com/v1}
+    api-key: ${SOVAI_API_KEY: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}
     model: sovai-pro
     timeout-seconds: 30
 
 jwt:
-  secret: ${JWT_SECRET:change_me_to_a_very_long_secret_string}
+  secret: ${JWT_SECRET:7jYMds1ou61kcD3dqXXP0bbeKatGGv8Hn3pkFd25Y1NeqXEy/qk9ejjman4u0igWhj4epNo6G58r6RBbNjtwCA==}
   expiration-ms: 86400000
 
 logging:

@@ -11,12 +11,12 @@ spring:
 sovai:
   api:
     base-url: ${SOVAI_API_URL:https://api.openai.com/v1}
-    api-key: ${SOVAI_API_KEY:}
+    api-key: ${SOVAI_API_KEY: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}
     model: sovai-pro
     timeout-seconds: 30
 
 jwt:
-  secret: ${JWT_SECRET:K9mX2vPqR8nLwYtJdCbUeZsAoFhGiMkNpQrSuVxWyHz3456789+/==}
+  secret: ${JWT_SECRET:7jYMds1ou61kcD3dqXXP0bbeKatGGv8Hn3pkFd25Y1NeqXEy/qk9ejjman4u0igWhj4epNo6G58r6RBbNjtwCA==}
   expiration-ms: 86400000
 
 server:

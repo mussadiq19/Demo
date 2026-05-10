@@ -10,7 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/roadmaps")
+@RequestMapping({"/api/roadmap", "/api/roadmaps"})
 @RequiredArgsConstructor
 public class RoadmapController {
 
@@ -25,6 +25,17 @@ public class RoadmapController {
     @GetMapping("/{userId}")
     @PreAuthorize("hasAnyRole('EMPLOYEE','COMPANY_ADMIN','ADMIN')")
     public ApiResponse<RoadmapResponse> get(@PathVariable Long userId, Authentication authentication) {
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        boolean isEmployee = principal.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_EMPLOYEE"));
+        if (isEmployee && !principal.getId().equals(userId)) {
+            throw new IllegalArgumentException("Employees can view only their own roadmap");
+        }
+        return ApiResponse.ok(roadmapService.getByUser(userId));
+    }
+
+    @GetMapping(params = "userId")
+    @PreAuthorize("hasAnyRole('EMPLOYEE','COMPANY_ADMIN','ADMIN')")
+    public ApiResponse<RoadmapResponse> getByQueryParam(@RequestParam Long userId, Authentication authentication) {
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
         boolean isEmployee = principal.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_EMPLOYEE"));
         if (isEmployee && !principal.getId().equals(userId)) {

@@ -59,25 +59,26 @@ const Register = () => {
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-header">
-          <div className="auth-logo">Sov<span>AI</span></div>
-          <div className="auth-subtitle">Sovereign Intelligence</div>
+    <div className="auth-container min-h-screen bg-gradient-to-br from-brand-900 to-brand-700 flex items-center justify-center p-4">
+      <div className="auth-card bg-white rounded-3xl shadow-2xl p-10 w-full max-w-md">
+        <div className="text-center">
+          <div className="auth-logo text-brand-600 text-2xl font-bold">⚡ Foresight</div>
+          <div className="auth-subtitle text-xs text-gray-400 uppercase tracking-widest mt-1">Intelligent Business Operations</div>
+          <div className="border-t border-surface-border my-6" />
         </div>
 
-        <h2 className="auth-title">Create Account</h2>
-        <p className="auth-description">Join SovAI to start analyzing risks and skills</p>
+        <h2 className="auth-title text-center text-2xl font-semibold text-gray-900">Create Account</h2>
+        <p className="auth-description text-center text-sm text-gray-500">Join Foresight to start analyzing risks and skills</p>
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit} className="auth-form space-y-4 mt-6">
           {(error || authError) && (
-            <div className="error-message">
+            <div className="error-message bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 mt-2">
               {error || authError}
             </div>
           )}
 
           <div className="form-group">
-            <label htmlFor="fullName">Full Name</label>
+            <label htmlFor="fullName" className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5 block">Full Name</label>
             <input
               type="text"
               id="fullName"
@@ -86,11 +87,12 @@ const Register = () => {
               placeholder="Your Full Name"
               disabled={loading}
               required
+              className="w-full rounded-xl border border-surface-border px-4 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all"
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email Address</label>
+            <label htmlFor="email" className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5 block">Email Address</label>
             <input
               type="email"
               id="email"
@@ -99,11 +101,12 @@ const Register = () => {
               placeholder="your@email.com"
               disabled={loading}
               required
+              className="w-full rounded-xl border border-surface-border px-4 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all"
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password" className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5 block">Password</label>
             <input
               type="password"
               id="password"
@@ -112,11 +115,12 @@ const Register = () => {
               placeholder="At least 8 characters"
               disabled={loading}
               required
+              className="w-full rounded-xl border border-surface-border px-4 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all"
             />
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password</label>
+            <label htmlFor="confirmPassword" className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1.5 block">Confirm Password</label>
             <input
               type="password"
               id="confirmPassword"
@@ -125,20 +129,21 @@ const Register = () => {
               placeholder="Confirm your password"
               disabled={loading}
               required
+              className="w-full rounded-xl border border-surface-border px-4 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:border-transparent outline-none transition-all"
             />
           </div>
 
           <button
             type="submit"
-            className="btn btn-primary"
+            className="btn btn-primary w-full bg-brand-600 hover:bg-brand-700 text-white font-semibold py-3 rounded-xl transition-colors text-sm"
             disabled={loading}
           >
             {loading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
 
-        <p className="auth-link">
-          Already have an account? <Link to="/login">Sign in here</Link>
+        <p className="auth-link text-xs text-gray-400 text-center mt-6">
+          Already have an account? <Link className="text-brand-600 hover:underline" to="/login">Sign in here</Link>
         </p>
       </div>
     </div>

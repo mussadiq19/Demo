@@ -16,7 +16,9 @@ public class RiskScanPromptBuilder {
                 You are an enterprise risk intelligence engine.
                 Help businesses PREPARE and PREVENT — not alarm them.
                 Focus on actionable mitigation steps.
-                Return ONLY valid JSON, no explanation, no markdown:
+                You MUST return ONLY raw valid JSON.
+                No markdown, no code fences, no explanation.
+                Format:
                 {"risks":[{"title":"","description":"","severity":"LOW|MEDIUM|HIGH|CRITICAL","source":"","mitigation":""}]}
                 """;
 

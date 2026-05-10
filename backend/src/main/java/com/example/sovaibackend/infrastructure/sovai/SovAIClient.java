@@ -5,17 +5,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Duration;
 import java.util.Map;
 
-@Component
-@RequiredArgsConstructor
 public class SovAIClient {
 
-    private final WebClient webClient;
+    private WebClient webClient;
 
     @Value("${sovai.api.base-url}")
     private String baseUrl;

@@ -1,34 +1,49 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import AuthService from '../services/authService';
 
-/**
- * AuthContext - Provides authentication state and methods to the entire app
- */
 const AuthContext = createContext(null);
 
-/**
- * AuthProvider Component - Wraps the app and provides authentication context
- */
+const decodeUserFromToken = (token, emailFallback) => {
+  if (!token) return null;
+
+  const payload = JSON.parse(atob(token.split('.')[1]));
+  console.log('JWT payload:', payload);
+
+  const companyId = payload.companyId ?? payload.company_id ?? payload.company?.id;
+  const id = payload.id ?? payload.userId ?? payload.user_id ?? payload.sub;
+
+  return {
+    id: id != null ? Number(id) : undefined,
+    email: payload.email ?? emailFallback ?? localStorage.getItem('userEmail') ?? '',
+    role: payload.role,
+    companyId: companyId != null ? Number(companyId) : undefined,
+  };
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  /**
-   * Initialize user from localStorage on mount
-   */
   useEffect(() => {
     const initializeAuth = () => {
-      const token = localStorage.getItem('authToken');
-      const userId = localStorage.getItem('userId');
-      const userRole = localStorage.getItem('userRole');
+      const storedToken = localStorage.getItem('token') || localStorage.getItem('authToken');
 
-      if (token && userId) {
-        setUser({
-          userId,
-          role: userRole,
-          token,
-        });
+      if (storedToken) {
+        if (!localStorage.getItem('token')) {
+          localStorage.setItem('token', storedToken);
+        }
+        try {
+          const decodedUser = decodeUserFromToken(storedToken);
+          setToken(storedToken);
+          setUser(decodedUser);
+        } catch (err) {
+          localStorage.removeItem('token');
+          localStorage.removeItem('authToken');
+          setToken(null);
+          setUser(null);
+        }
       }
       setLoading(false);
     };
@@ -36,71 +51,59 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, []);
 
-  /**
-   * Register new user
-   */
   const register = async (fullName, email, password, companyId) => {
     setError(null);
     try {
-      const response = await AuthService.register(fullName, email, password, companyId);
-      setUser({
-        userId: response.data.userId,
-        role: response.data.role,
-        token: response.data.token,
-      });
-      return response;
+      const authData = await AuthService.register(fullName, email, password, companyId);
+      localStorage.setItem('userEmail', email);
+      const decodedUser = decodeUserFromToken(authData.token, email);
+      setToken(authData.token);
+      setUser(decodedUser);
+      return authData;
     } catch (err) {
-      const errorMessage = err.message || 'Registration failed';
+      const errorMessage = err.response?.data?.message || err.message || 'Registration failed';
       setError(errorMessage);
       throw err;
     }
   };
 
-  /**
-   * Login user
-   */
   const login = async (email, password) => {
     setError(null);
     try {
-      const response = await AuthService.login(email, password);
-      setUser({
-        userId: response.data.userId,
-        role: response.data.role,
-        token: response.data.token,
-      });
-      return response;
+      const authData = await AuthService.login(email, password);
+      localStorage.setItem('userEmail', email);
+      const decodedUser = decodeUserFromToken(authData.token, email);
+      setToken(authData.token);
+      setUser(decodedUser);
+      return authData;
     } catch (err) {
-      const errorMessage = err.message || 'Login failed';
+      const errorMessage = err.response?.data?.message || err.message || 'Login failed';
       setError(errorMessage);
       throw err;
     }
   };
 
-  /**
-   * Logout user
-   */
   const logout = async () => {
     await AuthService.logout();
     setUser(null);
+    setToken(null);
     setError(null);
   };
 
   const value = {
     user,
+    token,
     loading,
     error,
     register,
     login,
     logout,
-    isAuthenticated: !!user,
+    isAuthenticated: !!user && !!token,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-/**
- * Custom hook to use auth context
- */
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -110,4 +113,3 @@ export const useAuth = () => {
 };
 
 export default AuthContext;
-

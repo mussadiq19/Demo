@@ -10,8 +10,8 @@ spring:
 
 sovai:
   api:
-    base-url: ${SOVAI_API_URL:https://api.openai.com/v1}
-    api-key: ${SOVAI_API_KEY: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}
+    base-url: ${SOVAI_API_URL:https://api.groq.com/openai/v1}
+    api-key: ${SOVAI_API_KEY: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}
     model: sovai-pro
     timeout-seconds: 30
 

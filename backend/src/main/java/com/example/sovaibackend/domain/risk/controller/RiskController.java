@@ -39,8 +39,14 @@ public class RiskController {
 
     @PostMapping("/scan")
     @PreAuthorize("hasRole('COMPANY_ADMIN')")
-    public ApiResponse<RiskScanResult> scan(@RequestParam Long companyId) {
-        return ApiResponse.ok(riskScannerJobService.runScan(companyId), "Risk scan triggered to support proactive decisions");
+    public ApiResponse<RiskScanResult> scan(
+            @RequestBody(required = false) Map<String, Long> body,
+            @RequestParam(required = false) Long companyId) {
+        Long targetCompanyId = companyId != null ? companyId : body != null ? body.get("companyId") : null;
+        if (targetCompanyId == null) {
+            throw new IllegalArgumentException("companyId is required");
+        }
+        return ApiResponse.ok(riskScannerJobService.runScan(targetCompanyId), "Risk scan triggered to support proactive decisions");
     }
 
     @PutMapping("/{id}/acknowledge")
@@ -58,4 +64,3 @@ public class RiskController {
         return ApiResponse.ok(riskService.stats(companyId));
     }
 }
-

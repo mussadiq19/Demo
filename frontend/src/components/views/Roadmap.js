@@ -1,61 +1,30 @@
 import React from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '../../hooks/useAuth';
+import { roadmapService } from '../../services/roadmapService';
 
 const Roadmap = () => {
-  const roadmapSteps = [
-    {
-      name: 'Python for Data Science — Foundations',
-      meta: 'Coursera · Completed Apr 20',
-      hours: '14 hrs',
-      completed: true,
-      current: false
-    },
-    {
-      name: 'Intro to Machine Learning with scikit-learn',
-      meta: 'fast.ai · Completed Apr 29',
-      hours: '18 hrs',
-      completed: true,
-      current: false
-    },
-    {
-      name: 'Transformer Architecture Deep Dive',
-      meta: 'Andrej Karpathy · YouTube · Completed May 5',
-      hours: '8 hrs',
-      completed: true,
-      current: false
-    },
-    {
-      name: 'LLM Fine-tuning with LoRA — In Progress',
-      meta: 'Hugging Face Course · Started May 7 · You\'re doing great!',
-      hours: '12 hrs',
-      completed: false,
-      current: true
-    },
-    {
-      name: 'Vector Databases & RAG Architectures',
-      meta: 'Pinecone Academy · Upcoming',
-      hours: '10 hrs',
-      completed: false,
-      current: false
-    },
-    {
-      name: 'MLOps with MLflow & Kubeflow',
-      meta: 'DataTalks.Club · Upcoming',
-      hours: '16 hrs',
-      completed: false,
-      current: false
-    },
-    {
-      name: 'Capstone: Deploy an LLM microservice',
-      meta: 'Internal project · Upcoming',
-      hours: '8 hrs',
-      completed: false,
-      current: false
-    }
-  ];
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const { data: roadmap, isLoading } = useQuery({
+    queryKey: ['roadmap', user?.id],
+    queryFn: () => roadmapService.getRoadmap(user.id),
+    enabled: !!user?.id,
+  });
 
+  const completeMutation = useMutation({
+    mutationFn: roadmapService.completeStep,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['roadmap', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    },
+  });
+
+  const roadmapSteps = roadmap?.steps || [];
   const completedSteps = roadmapSteps.filter(step => step.completed).length;
   const totalSteps = roadmapSteps.length;
-  const progressPercentage = Math.round((completedSteps / totalSteps) * 100);
+  const progressPercentage = totalSteps ? Math.round((completedSteps / totalSteps) * 100) : 0;
+  const firstIncompleteId = roadmapSteps.find((step) => !step.completed)?.id;
 
   return (
     <div id="view-roadmap">
@@ -71,7 +40,7 @@ const Roadmap = () => {
         </div>
         <div className="scan-text">
           <div className="t1">Your personalised growth path — built to keep you ahead.</div>
-          <div className="t2">⚡ Powered by SovAI · Rahul Mehta · Engineering · Last updated May 9</div>
+          <div className="t2">⚡ Powered by SovAI · User {user?.id ?? ''} · {roadmap?.title || 'Roadmap'} · Backend synced</div>
         </div>
         <button 
           className="btn" 
@@ -91,9 +60,9 @@ const Roadmap = () => {
       <div className="full-card">
         <div className="card-head">
           <div>
-            <div className="card-title">AI/ML Upskilling Roadmap</div>
+            <div className="card-title">{roadmap?.title || 'AI/ML Upskilling Roadmap'}</div>
             <div className="card-sub">
-              {completedSteps} of {totalSteps} steps complete · ~48 hrs remaining
+              {completedSteps} of {totalSteps} steps complete
             </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -117,59 +86,66 @@ const Roadmap = () => {
           </div>
         </div>
         
-        {roadmapSteps.map((step, index) => (
+        {isLoading ? (
+          <div style={{ padding: '8px 0', fontSize: '12px', color: 'var(--text3)' }}>Loading roadmap...</div>
+        ) : roadmapSteps.map((step, index) => {
+          const current = step.id === firstIncompleteId;
+          return (
           <div 
-            key={index}
+            key={step.id}
             className={`roadmap-step ${
-              step.current ? 'current' : ''
+              current ? 'current' : ''
             } ${
-              !step.completed && !step.current ? 'upcoming' : ''
+              !step.completed && !current ? 'upcoming' : ''
             }`}
             style={{
-              background: step.current ? 'rgba(99,102,241,0.03)' : 'transparent',
-              borderRadius: step.current ? '8px' : '0',
-              padding: step.current ? '8px 10px' : '8px 0',
-              margin: step.current ? '0 -10px' : '0',
-              opacity: !step.completed && !step.current ? '0.5' : '1',
+              background: current ? 'rgba(99,102,241,0.03)' : 'transparent',
+              borderRadius: current ? '8px' : '0',
+              padding: current ? '8px 10px' : '8px 0',
+              margin: current ? '0 -10px' : '0',
+              opacity: !step.completed && !current ? '0.5' : '1',
               borderBottom: index === roadmapSteps.length - 1 ? 'none' : '0.5px solid var(--border)'
             }}
           >
-            <div 
+            <button
+              type="button"
               className={`step-check ${step.completed ? 'done' : ''}`}
               style={{ 
-                borderColor: step.current ? '#6366f1' : 'var(--border2)',
+                borderColor: current ? '#6366f1' : 'var(--border2)',
                 background: step.completed ? '#22c55e' : 'transparent'
               }}
+              onClick={() => !step.completed && completeMutation.mutate(step.id)}
+              disabled={step.completed || completeMutation.isPending}
             >
               {step.completed && (
                 <span style={{ fontSize: '11px', color: '#fff' }}>✓</span>
               )}
-              {step.current && (
+              {current && (
                 <span style={{ fontSize: '10px', color: '#6366f1', marginLeft: '1px' }}>▶</span>
               )}
-            </div>
+            </button>
             <div className="step-body">
               <div 
                 className="step-name" 
                 style={{ 
-                  color: step.current ? '#6366f1' : 'var(--text)' 
+                  color: current ? '#6366f1' : 'var(--text)' 
                 }}
               >
-                {step.name}
+                {step.description || step.skillName}
               </div>
-              <div className="step-meta">{step.meta}</div>
+              <div className="step-meta">{step.resourceUrl || 'Backend roadmap step'}</div>
             </div>
             <div 
               className="step-hrs" 
               style={{ 
-                color: step.current ? '#6366f1' : 'var(--text3)',
-                fontWeight: step.current ? '600' : 'normal'
+                color: current ? '#6366f1' : 'var(--text3)',
+                fontWeight: current ? '600' : 'normal'
               }}
             >
-              {step.hours}
+              {step.estimatedHours} hrs
             </div>
           </div>
-        ))}
+        )})}
       </div>
     </div>
   );

@@ -1,52 +1,59 @@
 import React, { useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '../../hooks/useAuth';
+import { riskService } from '../../services/riskService';
+
+const severityClass = (severity) => {
+  const normalized = String(severity || '').toUpperCase();
+  if (normalized === 'CRITICAL') return 'crit';
+  if (normalized === 'HIGH') return 'high';
+  if (normalized === 'MEDIUM') return 'med';
+  return 'low';
+};
+
+const formatDetected = (value) => {
+  if (!value) return 'unknown';
+  return new Date(value).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+};
 
 const RiskScanner = () => {
   const [activeTab, setActiveTab] = useState('All Risks');
-  
+  const [selectedRisk, setSelectedRisk] = useState(null);
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+
   const tabs = [];
-  
-  const riskSignals = [
-    {
-      severity: 'crit',
-      severityLabel: 'Critical',
-      title: 'TSMC supply disruption — Q3 chip shortage',
-      source: 'Reuters',
-      category: 'Supply Chain',
-      detected: 'May 7',
-      insight: 'Prepare by pre-ordering 30% additional inventory by June 15 or qualify MediaTek as alternative. Your ops team is well-positioned to manage this.',
-      acknowledged: false
+
+  const { data: risksPage, isLoading } = useQuery({
+    queryKey: ['risks-page', user?.companyId],
+    queryFn: () => riskService.getRisks({
+      companyId: user.companyId,
+      status: 'OPEN',
+      page: 0,
+      size: 20,
+    }),
+    enabled: !!user?.companyId,
+  });
+
+  const risks = risksPage?.content || [];
+
+  const scanMutation = useMutation({
+    mutationFn: () => riskService.triggerScan(user.companyId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['risks-page'] });
+      queryClient.invalidateQueries({ queryKey: ['risks'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
-    {
-      severity: 'high',
-      severityLabel: 'High',
-      title: 'React 19 legacy API deprecation',
-      source: 'GitHub',
-      category: 'Technology',
-      detected: 'May 6',
-      insight: '',
-      acknowledged: false
+  });
+
+  const acknowledgeMutation = useMutation({
+    mutationFn: riskService.acknowledge,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['risks-page'] });
+      queryClient.invalidateQueries({ queryKey: ['risks'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
-    {
-      severity: 'high',
-      severityLabel: 'High',
-      title: 'DPDP Act compliance gap — data residency',
-      source: 'MeitY',
-      category: 'Compliance',
-      detected: 'May 5',
-      insight: '',
-      acknowledged: false
-    },
-    {
-      severity: 'med',
-      severityLabel: 'Medium',
-      title: 'Competitor pricing pressure — SMB segment erosion',
-      source: 'G2 Reviews',
-      category: 'Market',
-      detected: 'May 4',
-      insight: '',
-      acknowledged: true
-    }
-  ];
+  });
 
   return (
     <div id="view-risks">
@@ -66,42 +73,46 @@ const RiskScanner = () => {
         <div className="card-head">
           <div>
             <div className="card-title">Active Risk Signals</div>
-            <div className="card-sub">14 open · 3 acknowledged · Last scan 4 min ago</div>
+            <div className="card-sub">{risksPage?.totalElements ?? risks.length} open · Last scan from backend</div>
           </div>
-          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
-            <div className="sovai-badge">⚡ SovAI</div>
-            <button 
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <div className="sovai-badge">⚡ Foresight AI</div>
+            <button
               className="btn btn-scan" 
               style={{ fontSize: '11px', padding: '6px 12px' }}
+              onClick={() => scanMutation.mutate()}
+              disabled={!user?.companyId || scanMutation.isPending}
             >
               <span style={{ fontSize: '13px' }}>📡</span>
-              Run AI Scan
+              {scanMutation.isPending ? 'Scanning...' : 'Run AI Scan'}
             </button>
           </div>
         </div>
         
-        {riskSignals.map((risk, index) => (
+        {isLoading ? (
+          <div style={{ padding: '10px 0', fontSize: '12px', color: 'var(--text3)' }}>Loading risks...</div>
+        ) : risks.map((risk, index) => (
           <div 
-            key={index} 
+            key={risk.id} 
             className="risk-row" 
             style={{ 
               padding: '10px 0',
-              borderBottom: index === riskSignals.length - 1 ? 'none' : '0.5px solid var(--border)'
+              borderBottom: index === risks.length - 1 ? 'none' : '0.5px solid var(--border)'
             }}
           >
-            <span className={`severity-pill ${risk.severity}`}>
-              {risk.severityLabel}
+            <span className={`severity-pill ${severityClass(risk.severity)}`}>
+              {risk.severity}
             </span>
             <div style={{ flex: 1, padding: '0 10px' }}>
               <div className="risk-title" style={{ fontSize: '13px', marginBottom: '2px' }}>
                 {risk.title}
               </div>
               <div style={{ fontSize: '11px', color: 'var(--text3)' }}>
-                Source: {risk.source} · {risk.category} · Detected {risk.detected}
+                Source: {risk.source || 'AI scan'} · {risk.categoryId ? `Category ${risk.categoryId}` : 'Risk'} · Detected {formatDetected(risk.detectedAt)}
               </div>
-              {risk.insight && (
+              {risk.description && (
                 <div className="ai-insight" style={{ marginTop: '6px', padding: '8px 10px' }}>
-                  <div className="ai-insight-text">{risk.insight}</div>
+                  <div className="ai-insight-text">{risk.description}</div>
                 </div>
               )}
             </div>
@@ -112,7 +123,7 @@ const RiskScanner = () => {
               alignItems: 'flex-end', 
               flexShrink: 0 
             }}>
-              {risk.acknowledged ? (
+              {risk.status === 'ACKNOWLEDGED' ? (
                 <span style={{ fontSize: '11px', color: '#6366f1', fontWeight: '500', padding: '4px 0' }}>
                   ✓ Acknowledged
                 </span>
@@ -121,12 +132,15 @@ const RiskScanner = () => {
                   <button 
                     className="btn btn-ghost" 
                     style={{ fontSize: '11px', padding: '4px 10px' }}
+                    onClick={() => acknowledgeMutation.mutate(risk.id)}
+                    disabled={acknowledgeMutation.isPending}
                   >
                     Acknowledge
                   </button>
                   <button 
                     className="btn btn-primary" 
                     style={{ fontSize: '11px', padding: '4px 10px' }}
+                    onClick={() => setSelectedRisk(risk)}
                   >
                     Action Plan
                   </button>
@@ -136,6 +150,26 @@ const RiskScanner = () => {
           </div>
         ))}
       </div>
+
+      {selectedRisk && (
+        <div
+          className="full-card"
+          style={{ marginTop: '8px', padding: '12px' }}
+        >
+          <div className="card-head">
+            <div>
+              <div className="card-title">Action Plan</div>
+              <div className="card-sub">{selectedRisk.title}</div>
+            </div>
+            <button className="btn btn-ghost" style={{ fontSize: '11px', padding: '4px 10px' }} onClick={() => setSelectedRisk(null)}>
+              Close
+            </button>
+          </div>
+          <div className="ai-insight-text">
+            {selectedRisk.mitigation || selectedRisk.description || 'No mitigation has been provided for this risk yet.'}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface RiskRepository extends JpaRepository<Risk, Long> {
@@ -30,6 +31,10 @@ public interface RiskRepository extends JpaRepository<Risk, Long> {
     long countByCompanyIdAndStatusAndSeverity(@Param("companyId") Long companyId,
                                               @Param("status") RiskStatus status,
                                               @Param("severity") RiskSeverity severity);
+
+    long countByCompanyIdAndSeverity(Long companyId, RiskSeverity severity);
+
+    Optional<Risk> findTopByCompanyIdOrderByDetectedAtDesc(Long companyId);
 
     List<Risk> findByCompanyIdAndStatus(Long companyId, RiskStatus status);
 }

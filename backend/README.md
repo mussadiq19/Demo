@@ -1,6 +1,6 @@
-# SovAI Backend (Spring Boot 3.2 + Gradle + MariaDB)
+# Foresight Backend (Spring Boot + Gradle + MariaDB)
 
-This repository contains the backend MVP for the SovAI Platform—a dual-product B2B SaaS solution featuring:
+This repository contains the backend MVP for Foresight — a dual-product B2B SaaS solution featuring:
 
 - **AI Business Risk Scanner**: Continuously monitors supply chain, tech stack, and market trends; flags risks in real time.
 - **Skills Gap Analyzer**: Maps workforce skills against emerging industry demands; auto-generates per-employee upskilling roadmaps.
@@ -83,14 +83,14 @@ Current migrations:
 ## Project Structure
 
 ```
-src/main/java/com/sovai/platform/
-├── SovaiPlatformApplication.java
+src/main/java/com/example/sovaibackend/
+├── BackendApplication.java
 ├── config/
 │   ├── SecurityConfig.java
 │   ├── JwtConfig.java
 │   ├── OpenApiConfig.java
 │   ├── QuartzConfig.java
-│   └── SovAIClientConfig.java
+│   └── AiClientConfig.java
 ├── common/
 │   ├── exception/
 │   ├── response/
@@ -99,12 +99,12 @@ src/main/java/com/sovai/platform/
 │   └── util/
 ├── domain/
 │   ├── auth/
-│   ├── company/
-│   ├── risk/
-│   ├── skills/
-│   └── notification/
++    ├── company/
+    ├── risk/
+    ├── skills/
+    └── notification/
 └── infrastructure/
-    └── sovai/
+    └── ai/
 ```
 
 ## Key Endpoints
@@ -144,4 +144,4 @@ Follow the design principles outlined above. Use DTOs for API contracts, MapStru
 
 ## License
 
-Proprietary - SovAI Platform
+Proprietary - Foresight

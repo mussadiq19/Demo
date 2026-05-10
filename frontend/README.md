@@ -1,6 +1,6 @@
-# SovAI Platform Dashboard - React Version
+# Foresight Dashboard - React Version
 
-This is the React version of the SovAI Platform Dashboard, converted from the original HTML implementation.
+This is the React version of the Foresight Dashboard, converted from the original HTML implementation.
 
 ## Project Structure
 

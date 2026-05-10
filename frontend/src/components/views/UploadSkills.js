@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
+import { skillsService } from '../../services/skillsService';
 
 const UploadSkills = () => {
   const [dragActive, setDragActive] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [uploadStatus, setUploadStatus] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleDrag = (e) => {
     e.preventDefault();
@@ -36,13 +39,29 @@ const UploadSkills = () => {
       name: file.name,
       size: (file.size / 1024).toFixed(2) + ' KB',
       type: file.type,
-      uploadDate: new Date().toLocaleDateString()
+      uploadDate: new Date().toLocaleDateString(),
+      file
     }));
     setUploadedFiles(prev => [...prev, ...newFiles]);
+    setUploadStatus('');
   };
 
   const removeFile = (index) => {
     setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const uploadFiles = async () => {
+    if (!uploadedFiles.length || isUploading) return;
+    setIsUploading(true);
+    setUploadStatus('');
+    try {
+      await Promise.all(uploadedFiles.map((item) => skillsService.upload(item.file)));
+      setUploadStatus('Upload complete. AI analysis started.');
+    } catch (err) {
+      setUploadStatus(err.response?.data?.message || err.message || 'Upload failed.');
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   return (
@@ -125,6 +144,12 @@ const UploadSkills = () => {
             </div>
           )}
 
+          {uploadStatus && (
+            <div className="card-sub" style={{ marginTop: '10px' }}>
+              {uploadStatus}
+            </div>
+          )}
+
           <div className="template-section">
             <div className="section-title">Need a template?</div>
             <div className="template-options">
@@ -140,11 +165,14 @@ const UploadSkills = () => {
           </div>
 
           <div className="upload-actions">
-            <button className="primary-btn" disabled={uploadedFiles.length === 0}>
+            <button className="primary-btn" disabled={uploadedFiles.length === 0 || isUploading} onClick={uploadFiles}>
               <span style={{ marginRight: '6px' }}>⚡</span>
-              Start AI Analysis
+              {isUploading ? 'Uploading...' : 'Start AI Analysis'}
             </button>
-            <button className="secondary-btn">Clear All</button>
+            <button className="secondary-btn" onClick={() => {
+              setUploadedFiles([]);
+              setUploadStatus('');
+            }}>Clear All</button>
           </div>
         </div>
       </div>

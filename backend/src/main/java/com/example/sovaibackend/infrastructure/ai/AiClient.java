@@ -17,20 +17,25 @@ public class AiClient {
 
     private final WebClient aiWebClient;
 
-    public com.example.sovaibackend.infrastructure.ai.AiResponse complete(AiRequest request) {
+    @org.springframework.beans.factory.annotation.Value("${ai.api.model}")
+    private String model;
+
+    public AiResponse complete(AiRequest request) {
         try {
-            log.debug("Calling AI API with model: {}", request.model());
+            log.debug("Calling AI API with model: {}", model);
 
             Map<String, Object> body = Map.of(
-                "model", request.model(),
+                "model", model,
                 "max_tokens", request.maxTokens(),
-                "system", request.systemPrompt(),
-                "messages", List.of(Map.of("role", "user", "content", request.userPrompt()))
+                "messages", List.of(
+                    Map.of("role", "system", "content", request.systemPrompt()),
+                    Map.of("role", "user", "content", request.userPrompt())
+                )
             );
 
             @SuppressWarnings("unchecked")
             Map<String, Object> response = aiWebClient.post()
-                .uri("/v1/messages")
+                .uri("/chat/completions")
                 .bodyValue(body)
                 .retrieve()
                 .onStatus(HttpStatusCode::isError, res ->
@@ -50,24 +55,30 @@ public class AiClient {
             }
 
             @SuppressWarnings("unchecked")
-            List<Map<String, Object>> content = (List<Map<String, Object>>) response.get("content");
-            if (content == null || content.isEmpty()) {
-                throw new SovAIAdapterException("AI API response missing content");
+            List<Map<String, Object>> choices = (List<Map<String, Object>>) response.get("choices");
+            if (choices == null || choices.isEmpty()) {
+                throw new SovAIAdapterException("AI API response missing choices");
             }
 
-            String text = (String) content.get(0).get("text");
+            @SuppressWarnings("unchecked")
+            Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
+            if (message == null) {
+                throw new SovAIAdapterException("AI API response missing message");
+            }
+
+            String text = (String) message.get("content");
 
             @SuppressWarnings("unchecked")
             Map<String, Object> usage = (Map<String, Object>) response.get("usage");
             if (usage == null) {
-                usage = Map.of("input_tokens", 0, "output_tokens", 0);
+                usage = Map.of("prompt_tokens", 0, "completion_tokens", 0);
             }
 
-            int inputTokens = ((Number) usage.getOrDefault("input_tokens", 0)).intValue();
-            int outputTokens = ((Number) usage.getOrDefault("output_tokens", 0)).intValue();
+            int promptTokens = ((Number) usage.getOrDefault("prompt_tokens", 0)).intValue();
+            int completionTokens = ((Number) usage.getOrDefault("completion_tokens", 0)).intValue();
 
-            log.info("AI API call succeeded: {} input tokens, {} output tokens", inputTokens, outputTokens);
-            return new AiResponse(text, inputTokens, outputTokens);
+            log.info("AI API call succeeded: {} prompt tokens, {} completion tokens", promptTokens, completionTokens);
+            return new AiResponse(text, promptTokens, completionTokens);
 
         } catch (SovAIAdapterException e) {
             throw e;

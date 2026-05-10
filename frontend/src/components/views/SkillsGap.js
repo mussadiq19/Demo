@@ -1,42 +1,27 @@
 import React, { useState } from 'react';
+import { useSkillsGap } from '../../hooks/useSkillsGap';
 
 const SkillsGap = () => {
   const [selectedDepartment, setSelectedDepartment] = useState('All departments');
-  
-  const departments = ['All departments', 'Engineering', 'Product'];
-  
-  const employees = [
-    {
-      name: 'Rahul Mehta',
-      role: 'Senior Engineer',
-      missingSkills: ['LLM Fine-tuning', 'MLOps', 'Vector DBs'],
-      gapScore: 82,
-      gapLevel: 'Critical',
-      gapColor: '#ef4444'
-    },
-    {
-      name: 'Priya Nair',
-      role: 'Product Manager',
-      missingSkills: ['AI Product Mgmt', 'SQL'],
-      gapScore: 64,
-      gapLevel: 'High',
-      gapColor: '#f97316'
-    },
-    {
-      name: 'Vikram Iyer',
-      role: 'Data Analyst',
-      missingSkills: ['Python', 'dbt'],
-      gapScore: 41,
-      gapLevel: 'Medium',
-      gapColor: '#f59e0b'
-    }
-  ];
+  const { data: gapsData, isLoading } = useSkillsGap();
+
+  const departments = ['All departments', ...(gapsData?.byDepartment || []).map((dept) => dept.name)];
+  const rows = (gapsData?.byDepartment || []).filter((dept) =>
+    selectedDepartment === 'All departments' || dept.name === selectedDepartment
+  );
 
   const getGapScoreColor = (score) => {
     if (score >= 80) return '#b91c1c';
     if (score >= 60) return '#c2410c';
     if (score >= 40) return '#b45309';
     return '#15803d';
+  };
+
+  const getGapLevel = (score) => {
+    if (score >= 80) return 'Critical';
+    if (score >= 60) return 'High';
+    if (score >= 40) return 'Medium';
+    return 'Low';
   };
 
   return (
@@ -52,8 +37,8 @@ const SkillsGap = () => {
           <span style={{ fontSize: '18px', color: '#a78bfa' }}>🧠</span>
         </div>
         <div className="scan-text">
-          <div className="t1">⚡ Powered by SovAI — Future Skills Gap Analyzer</div>
-          <div className="t2">131 employees · 5 departments · AI-generated gap analysis · Updated May 9</div>
+          <div className="t1">⚡ Powered by Foresight AI — Future Skills Gap Analyzer</div>
+          <div className="t2">{gapsData?.overallGapPercentage ?? 0}% overall gap · {rows.length} departments · AI-generated gap analysis</div>
         </div>
         <button 
           className="btn" 
@@ -139,45 +124,45 @@ const SkillsGap = () => {
           </div>
         </div>
         
-        {employees.map((employee, index) => (
+        {isLoading ? (
+          <div style={{ padding: '9px 0', fontSize: '12px', color: 'var(--text3)' }}>Loading skills gaps...</div>
+        ) : rows.map((department, index) => (
           <div 
-            key={index}
+            key={department.name}
             style={{ 
               display: 'grid', 
               gridTemplateColumns: '2fr 3fr 2fr 80px', 
               gap: '8px', 
               alignItems: 'center', 
               padding: '9px 0',
-              borderBottom: index === employees.length - 1 ? 'none' : '0.5px solid var(--border)'
+              borderBottom: index === rows.length - 1 ? 'none' : '0.5px solid var(--border)'
             }}
           >
             <div>
-              <div style={{ fontSize: '12px', fontWeight: '500' }}>{employee.name}</div>
-              <div style={{ fontSize: '10px', color: 'var(--text3)' }}>{employee.role}</div>
+              <div style={{ fontSize: '12px', fontWeight: '500' }}>{department.name}</div>
+              <div style={{ fontSize: '10px', color: 'var(--text3)' }}>{department.staffCount} employees</div>
             </div>
             <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-              {employee.missingSkills.map((skill, skillIndex) => (
-                <span key={skillIndex} className="risk-category">
-                  {skill}
-                </span>
-              ))}
+              <span className="risk-category">
+                Department gap
+              </span>
             </div>
             <div>
               <div className="gap-bar-wrap" style={{ marginBottom: '4px' }}>
                 <div 
                   className="gap-bar" 
                   style={{ 
-                    width: `${employee.gapScore}%`, 
-                    background: employee.gapColor 
+                    width: `${department.gapPercentage}%`, 
+                    background: getGapScoreColor(department.gapPercentage) 
                   }}
                 ></div>
               </div>
               <span style={{ 
                 fontSize: '11px', 
-                color: getGapScoreColor(employee.gapScore), 
+                color: getGapScoreColor(department.gapPercentage), 
                 fontWeight: '600' 
               }}>
-                {employee.gapScore} / {employee.gapLevel}
+                {department.gapPercentage} / {getGapLevel(department.gapPercentage)}
               </span>
             </div>
             <button 

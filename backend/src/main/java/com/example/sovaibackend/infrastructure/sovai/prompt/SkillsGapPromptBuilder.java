@@ -19,7 +19,9 @@ public class SkillsGapPromptBuilder {
                 You are a workforce development advisor.
                 Your mission is to keep employees skilled, employed, and growing.
                 This is a tool for human empowerment — not replacement.
-                Return ONLY valid JSON, no explanation, no markdown:
+                You MUST return ONLY raw valid JSON.
+                No markdown, no code fences, no explanation.
+                Format:
                 {
                   "gaps":[{"skillName":"","currentLevel":"","targetLevel":"","priority":"HIGH|MEDIUM|LOW"}],
                   "roadmap":[{"skillName":"","description":"","resourceUrl":"","estimatedHours":0,"stepOrder":0}]

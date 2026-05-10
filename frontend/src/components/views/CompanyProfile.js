@@ -1,6 +1,16 @@
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '../../hooks/useAuth';
+import { companyService } from '../../services/companyService';
 
 const CompanyProfile = () => {
+  const { user } = useAuth();
+  const { data: company } = useQuery({
+    queryKey: ['company', user?.companyId],
+    queryFn: () => companyService.getCompany(user.companyId),
+    enabled: !!user?.companyId,
+  });
+
   return (
     <div className="profile-page">
       <div className="card">
@@ -21,28 +31,23 @@ const CompanyProfile = () => {
               <label>Company Name</label>
               <input
                 type="text"
-                defaultValue="SovAI Technologies"
+                value={company?.name || ''}
+                readOnly
                 className="input"
               />
             </div>
 
             <div className="form-group">
               <label>Industry</label>
-              <select className="input">
-                <option>Technology</option>
-                <option>Healthcare</option>
-                <option>Finance</option>
-                <option>Education</option>
+              <select className="input" value={company?.industry || ''} onChange={() => {}}>
+                <option value={company?.industry || ''}>{company?.industry || 'Not provided'}</option>
               </select>
             </div>
 
             <div className="form-group">
               <label>Company Size</label>
-              <select className="input">
-                <option>1 - 10 Employees</option>
-                <option>11 - 50 Employees</option>
-                <option>51 - 200 Employees</option>
-                <option>201 - 1000 Employees</option>
+              <select className="input" value={company?.size || ''} onChange={() => {}}>
+                <option value={company?.size || ''}>{company?.size || 'Not provided'}</option>
               </select>
             </div>
 
@@ -50,7 +55,8 @@ const CompanyProfile = () => {
               <label>Location</label>
               <input
                 type="text"
-                defaultValue="Mumbai, India"
+                value={company?.techStack || ''}
+                readOnly
                 className="input"
               />
             </div>
@@ -96,7 +102,8 @@ const CompanyProfile = () => {
           <textarea
             className="input textarea"
             rows="6"
-            defaultValue="SovAI Technologies is focused on helping organizations adapt to the future of AI-driven workforces through advanced analytics, automation strategies, and workforce transformation solutions."
+            value={company?.supplyChainInfo || ''}
+            readOnly
           ></textarea>
         </div>
 

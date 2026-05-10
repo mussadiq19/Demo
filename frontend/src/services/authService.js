@@ -1,160 +1,97 @@
-import api from './api';
+import axiosInstance from '../lib/axios';
 
-/**
- * Authentication Service
- * Handles all auth-related API calls to the backend
- */
+const persistAuth = (authData) => {
+  if (!authData?.token) return;
+
+  localStorage.setItem('token', authData.token);
+  localStorage.setItem('userId', authData.userId);
+  localStorage.setItem('userRole', authData.role);
+  localStorage.setItem('tokenExpiresAt', authData.expiresAt);
+};
+
+const clearAuth = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('authToken');
+  localStorage.removeItem('authUser');
+  localStorage.removeItem('userId');
+  localStorage.removeItem('userRole');
+  localStorage.removeItem('tokenExpiresAt');
+};
+
+const unwrap = (response) => response.data?.data;
+
 const AuthService = {
-  /**
-   * Register a new user
-   * @param {string} fullName - User's full name
-   * @param {string} email - User's email
-   * @param {string} password - User's password
-   * @param {number} companyId - Optional company ID
-   * @returns {Promise} Response with token and user data
-   */
   register: async (fullName, email, password, companyId) => {
-    try {
-      const response = await api.post('/api/auth/register', {
-        fullName,
-        email,
-        password,
-        companyId: companyId || null,
-      });
-
-      if (response.data?.token) {
-        localStorage.setItem('authToken', response.data.token);
-        localStorage.setItem('userId', response.data.userId);
-        localStorage.setItem('userRole', response.data.role);
-        localStorage.setItem('tokenExpiresAt', response.data.expiresAt);
-      }
-
-      return response;
-    } catch (error) {
-      throw error;
-    }
+    const response = await axiosInstance.post('/auth/register', {
+      fullName,
+      email,
+      password,
+      companyId: companyId || null,
+    });
+    const authData = unwrap(response);
+    persistAuth(authData);
+    return authData;
   },
 
-  /**
-   * Login user
-   * @param {string} email - User's email
-   * @param {string} password - User's password
-   * @returns {Promise} Response with token and user data
-   */
   login: async (email, password) => {
-    try {
-      const response = await api.post('/api/auth/login', {
-        email,
-        password,
-      });
-
-      if (response.data?.token) {
-        localStorage.setItem('authToken', response.data.token);
-        localStorage.setItem('userId', response.data.userId);
-        localStorage.setItem('userRole', response.data.role);
-        localStorage.setItem('tokenExpiresAt', response.data.expiresAt);
-      }
-
-      return response;
-    } catch (error) {
-      throw error;
-    }
+    const response = await axiosInstance.post('/auth/login', {
+      email,
+      password,
+    });
+    const authData = unwrap(response);
+    persistAuth(authData);
+    return authData;
   },
 
-  /**
-   * Refresh JWT token
-   * @returns {Promise} Response with new token
-   */
   refreshToken: async () => {
-    try {
-      const token = localStorage.getItem('authToken');
-      if (!token) {
-        throw new Error('No token found');
-      }
-
-      const response = await api.post('/api/auth/refresh', {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.data?.token) {
-        localStorage.setItem('authToken', response.data.token);
-        localStorage.setItem('tokenExpiresAt', response.data.expiresAt);
-      }
-
-      return response;
-    } catch (error) {
-      throw error;
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('No token found');
     }
+
+    const response = await axiosInstance.post('/auth/refresh', {}, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const authData = unwrap(response);
+    persistAuth(authData);
+    return authData;
   },
 
-  /**
-   * Get current authenticated user
-   * @returns {Promise} Response with current user data
-   */
   getCurrentUser: async () => {
-    try {
-      const response = await api.get('/api/auth/me');
-      return response;
-    } catch (error) {
-      throw error;
-    }
+    const response = await axiosInstance.get('/auth/me');
+    return unwrap(response);
   },
 
-  /**
-   * Logout user - clears local storage and calls backend logout
-   */
   logout: async () => {
     try {
-      await api.post('/api/auth/logout');
+      await axiosInstance.post('/auth/logout');
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userId');
-      localStorage.removeItem('userRole');
-      localStorage.removeItem('tokenExpiresAt');
+      clearAuth();
     }
   },
 
-  /**
-   * Check if user is authenticated
-   * @returns {boolean} True if user has valid token
-   */
   isAuthenticated: () => {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('token');
     const expiresAt = localStorage.getItem('tokenExpiresAt');
 
     if (!token || !expiresAt) {
       return false;
     }
 
-    // Check if token is expired
-    const now = Date.now();
-    return now < parseInt(expiresAt);
+    return Date.now() < parseInt(expiresAt, 10);
   },
 
-  /**
-   * Get current user data from localStorage
-   * @returns {object} User data
-   */
-  getCurrentUserLocal: () => {
-    return {
-      userId: localStorage.getItem('userId'),
-      role: localStorage.getItem('userRole'),
-      token: localStorage.getItem('authToken'),
-    };
-  },
+  getCurrentUserLocal: () => ({
+    userId: localStorage.getItem('userId'),
+    role: localStorage.getItem('userRole'),
+    token: localStorage.getItem('token'),
+  }),
 
-  /**
-   * Get stored auth token
-   * @returns {string} JWT token
-   */
-  getToken: () => {
-    return localStorage.getItem('authToken');
-  },
+  getToken: () => localStorage.getItem('token'),
 };
 
 export default AuthService;
-

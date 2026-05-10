@@ -3,6 +3,8 @@ package com.example.sovaibackend.domain.skills.service;
 import com.example.sovaibackend.domain.auth.entity.User;
 import com.example.sovaibackend.domain.auth.repository.UserRepository;
 import com.example.sovaibackend.domain.skills.dto.GapAnalysisResponse;
+import com.example.sovaibackend.domain.skills.dto.CompanyGapResponse;
+import com.example.sovaibackend.domain.skills.dto.DepartmentGapResponse;
 import com.example.sovaibackend.domain.skills.dto.SkillUploadRequest;
 import com.example.sovaibackend.domain.skills.entity.EmployeeSkill;
 import com.example.sovaibackend.domain.skills.entity.ProficiencyLevel;
@@ -14,7 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Map;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -69,6 +74,33 @@ public class SkillsServiceImpl implements SkillsService {
             lacksAdvanced ? "HIGH" : "MEDIUM",
             "Invest in targeted training to improve adaptability and long-term employability."
         );
+    }
+
+    @Override
+    public CompanyGapResponse getGaps(Long companyId) {
+        List<User> employees = userRepository.findByCompanyId(companyId);
+
+        Map<String, List<User>> byDepartment = employees.stream()
+            .collect(Collectors.groupingBy(u -> u.getRole().name()));
+
+        List<DepartmentGapResponse> deptGaps = byDepartment.entrySet()
+            .stream()
+            .map(entry -> {
+                String dept = entry.getKey();
+                List<Long> userIds = entry.getValue().stream().map(User::getId).toList();
+
+                int gapPct = userIds.isEmpty()
+                    ? 0
+                    : employeeSkillRepository.calculateGapPercentageForUsers(userIds);
+
+                return new DepartmentGapResponse(dept, gapPct, userIds.size());
+            })
+            .sorted(Comparator.comparingInt(DepartmentGapResponse::gapPercentage).reversed())
+            .toList();
+
+        int overall = employeeSkillRepository.calculateGapPercentage(companyId);
+
+        return new CompanyGapResponse(deptGaps, overall);
     }
 }
 

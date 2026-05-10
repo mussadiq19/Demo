@@ -3,12 +3,11 @@ package com.example.sovaibackend.domain.company.controller;
 import com.example.sovaibackend.common.response.ApiResponse;
 import com.example.sovaibackend.domain.company.dto.CompanyRequest;
 import com.example.sovaibackend.domain.company.dto.CompanyResponse;
+import com.example.sovaibackend.domain.company.dto.DashboardResponse;
 import com.example.sovaibackend.domain.company.service.CompanyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/companies")
@@ -28,8 +27,8 @@ public class CompanyController {
     }
 
     @GetMapping("/{id}/dashboard")
-    public ApiResponse<Map<String, Object>> dashboard(@PathVariable Long id) {
-        return ApiResponse.ok(companyService.dashboard(id), "Dashboard reflects risk and workforce readiness");
+    public ApiResponse<DashboardResponse> dashboard(@PathVariable Long id) {
+        return ApiResponse.ok(companyService.getDashboard(id), "Dashboard reflects risk and workforce readiness");
     }
 }
 

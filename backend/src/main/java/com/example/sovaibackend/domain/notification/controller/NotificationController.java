@@ -1,11 +1,15 @@
 package com.example.sovaibackend.domain.notification.controller;
 
 import com.example.sovaibackend.common.response.ApiResponse;
-import com.example.sovaibackend.common.response.PagedResponse;
 import com.example.sovaibackend.domain.notification.dto.NotificationResponse;
 import com.example.sovaibackend.domain.notification.service.NotificationService;
+import com.example.sovaibackend.common.security.UserPrincipal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/notifications")
@@ -15,14 +19,15 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @GetMapping
-    public ApiResponse<PagedResponse<NotificationResponse>> list(@RequestParam Long userId,
-                                                                 @RequestParam(defaultValue = "0") int page,
-                                                                 @RequestParam(defaultValue = "20") int size) {
-        return ApiResponse.ok(notificationService.list(userId, page, size));
+    public ResponseEntity<ApiResponse<List<NotificationResponse>>> getAll(
+            @AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.ok(ApiResponse.ok(
+                notificationService.getByUserId(principal.getId())));
     }
 
     @PutMapping("/{id}/read")
-    public ApiResponse<NotificationResponse> markRead(@PathVariable Long id) {
-        return ApiResponse.ok(notificationService.markRead(id), "Notification marked as read");
+    public ResponseEntity<ApiResponse<Void>> markRead(@PathVariable Long id) {
+        notificationService.markAsRead(id);
+        return ResponseEntity.ok(ApiResponse.ok(null));
     }
 }

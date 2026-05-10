@@ -1,6 +1,7 @@
 package com.example.sovaibackend.domain.skills.controller;
 
 import com.example.sovaibackend.common.response.ApiResponse;
+import com.example.sovaibackend.common.security.UserPrincipal;
 import com.example.sovaibackend.domain.skills.dto.CompanyGapResponse;
 import com.example.sovaibackend.domain.skills.dto.GapAnalysisResponse;
 import com.example.sovaibackend.domain.skills.dto.SkillUploadRequest;
@@ -8,6 +9,7 @@ import com.example.sovaibackend.domain.skills.service.SkillsAnalysisJobService;
 import com.example.sovaibackend.domain.skills.service.SkillsService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,11 +30,15 @@ public class SkillsController {
     }
 
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ApiResponse<String> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ApiResponse<Integer> uploadFile(@RequestParam("file") MultipartFile file,
+                                           @AuthenticationPrincipal UserPrincipal principal) {
         if (file == null || file.isEmpty()) {
             throw new IllegalArgumentException("file is required");
         }
-        return ApiResponse.ok(file.getOriginalFilename(), "Skills file uploaded. AI analysis will begin automatically.");
+        return ApiResponse.ok(
+                skillsService.processUpload(file, principal.getId()),
+                "Skills file uploaded. AI analysis will begin automatically."
+        );
     }
 
     @GetMapping("/gaps")

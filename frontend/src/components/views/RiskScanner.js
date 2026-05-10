@@ -35,6 +35,12 @@ const RiskScanner = () => {
     enabled: !!user?.companyId,
   });
 
+  const { data: stats } = useQuery({
+    queryKey: ['risk-stats', user?.companyId],
+    queryFn: () => riskService.getStats(user.companyId),
+    enabled: !!user?.companyId,
+  });
+
   const risks = risksPage?.content || [];
 
   const scanMutation = useMutation({
@@ -42,6 +48,7 @@ const RiskScanner = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['risks-page'] });
       queryClient.invalidateQueries({ queryKey: ['risks'] });
+      queryClient.invalidateQueries({ queryKey: ['risk-stats'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
   });
@@ -51,6 +58,17 @@ const RiskScanner = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['risks-page'] });
       queryClient.invalidateQueries({ queryKey: ['risks'] });
+      queryClient.invalidateQueries({ queryKey: ['risk-stats'] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    },
+  });
+
+  const resolveMutation = useMutation({
+    mutationFn: riskService.resolve,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['risks-page'] });
+      queryClient.invalidateQueries({ queryKey: ['risks'] });
+      queryClient.invalidateQueries({ queryKey: ['risk-stats'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
     },
   });
@@ -73,7 +91,7 @@ const RiskScanner = () => {
         <div className="card-head">
           <div>
             <div className="card-title">Active Risk Signals</div>
-            <div className="card-sub">{risksPage?.totalElements ?? risks.length} open · Last scan from backend</div>
+            <div className="card-sub">{stats?.open ?? risksPage?.totalElements ?? risks.length} open · {stats?.critical ?? 0} critical · {stats?.high ?? 0} high</div>
           </div>
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
             <div className="sovai-badge">⚡ Foresight AI</div>
@@ -143,6 +161,14 @@ const RiskScanner = () => {
                     onClick={() => setSelectedRisk(risk)}
                   >
                     Action Plan
+                  </button>
+                  <button 
+                    className="btn btn-ghost" 
+                    style={{ fontSize: '11px', padding: '4px 10px' }}
+                    onClick={() => resolveMutation.mutate(risk.id)}
+                    disabled={resolveMutation.isPending}
+                  >
+                    Resolve
                   </button>
                 </>
               )}

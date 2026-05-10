@@ -6,7 +6,9 @@ import com.example.sovaibackend.domain.company.repository.CompanyRepository;
 import com.example.sovaibackend.domain.risk.dto.RiskResponse;
 import com.example.sovaibackend.domain.risk.dto.RiskScanResult;
 import com.example.sovaibackend.domain.risk.entity.RiskSeverity;
+import com.example.sovaibackend.domain.risk.entity.RiskStatus;
 import com.example.sovaibackend.domain.risk.dto.RiskRequest;
+import com.example.sovaibackend.domain.risk.repository.RiskRepository;
 import com.example.sovaibackend.infrastructure.ai.AiClient;
 import com.example.sovaibackend.infrastructure.sovai.prompt.RiskScanPromptBuilder;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +24,7 @@ public class RiskScannerJobServiceImpl implements RiskScannerJobService, Analysi
     private final AiClient aiClient;
     private final RiskScanPromptBuilder promptBuilder;
     private final RiskService riskService;
+    private final RiskRepository riskRepository;
     private final AuditListener auditListener;
 
     @Override
@@ -32,15 +35,24 @@ public class RiskScannerJobServiceImpl implements RiskScannerJobService, Analysi
 
         aiClient.complete(promptBuilder.build(company));
 
-        RiskResponse created = riskService.create(buildSeed(companyId));
+        RiskRequest seed = buildSeed(companyId);
+        RiskResponse created = null;
+        boolean exists = riskRepository.existsByCompanyIdAndTitleAndStatus(
+                companyId,
+                seed.title(),
+                RiskStatus.OPEN
+        );
+        if (!exists) {
+            created = riskService.create(seed);
+        }
         auditListener.logEnd("RiskScannerJob", companyId);
 
         return new RiskScanResult(
             List.of(new RiskScanResult.RiskItem(
-                created.title(),
-                created.description(),
-                created.severity().name(),
-                created.source(),
+                seed.title(),
+                seed.description(),
+                seed.severity().name(),
+                seed.source(),
                 "See risk details for mitigation steps"
             ))
         );
@@ -62,4 +74,3 @@ public class RiskScannerJobServiceImpl implements RiskScannerJobService, Analysi
         );
     }
 }
-

@@ -4,6 +4,9 @@ export const skillsService = {
   getGaps: (companyId) =>
     axiosInstance.get('/skills/gaps', { params: { companyId } })
       .then((res) => res.data.data),
+  getEmployeeGap: (userId) =>
+    axiosInstance.get(`/skills/gaps/employee/${userId}`)
+      .then((res) => res.data.data),
   upload: (file) => {
     const formData = new FormData();
     formData.append('file', file);

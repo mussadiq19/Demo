@@ -34,8 +34,11 @@ public interface RiskRepository extends JpaRepository<Risk, Long> {
 
     long countByCompanyIdAndSeverity(Long companyId, RiskSeverity severity);
 
+    int countByCompanyIdAndStatus(Long companyId, RiskStatus status);
+
+    boolean existsByCompanyIdAndTitleAndStatus(Long companyId, String title, RiskStatus status);
+
     Optional<Risk> findTopByCompanyIdOrderByDetectedAtDesc(Long companyId);
 
     List<Risk> findByCompanyIdAndStatus(Long companyId, RiskStatus status);
 }
-

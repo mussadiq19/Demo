@@ -9,6 +9,7 @@ const SkillsGap = () => {
   const rows = (gapsData?.byDepartment || []).filter((dept) =>
     selectedDepartment === 'All departments' || dept.name === selectedDepartment
   );
+  const employeeRows = gapsData?.employeeGaps || [];
 
   const getGapScoreColor = (score) => {
     if (score >= 80) return '#b91c1c';
@@ -58,7 +59,7 @@ const SkillsGap = () => {
       <div className="full-card">
         <div className="card-head">
           <div>
-            <div className="card-title">Employee Skills Gap Analysis</div>
+            <div className="card-title">Department Skills Gap Analysis</div>
             <div className="card-sub">Sorted by gap severity</div>
           </div>
           <select 
@@ -93,7 +94,7 @@ const SkillsGap = () => {
             textTransform: 'uppercase', 
             letterSpacing: '0.5px' 
           }}>
-            Employee
+            Department
           </div>
           <div style={{ 
             fontSize: '11px', 
@@ -102,7 +103,7 @@ const SkillsGap = () => {
             textTransform: 'uppercase', 
             letterSpacing: '0.5px' 
           }}>
-            Missing Skills
+            Staff
           </div>
           <div style={{ 
             fontSize: '11px', 
@@ -144,7 +145,7 @@ const SkillsGap = () => {
             </div>
             <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
               <span className="risk-category">
-                Department gap
+                {department.staffCount} staff
               </span>
             </div>
             <div>
@@ -164,6 +165,54 @@ const SkillsGap = () => {
               }}>
                 {department.gapPercentage} / {getGapLevel(department.gapPercentage)}
               </span>
+            </div>
+            <button 
+              className="btn btn-primary" 
+              style={{ fontSize: '10px', padding: '4px 8px' }}
+            >
+              Roadmap
+            </button>
+          </div>
+        ))}
+      </div>
+      
+      <div className="full-card" style={{ marginTop: '8px' }}>
+        <div className="card-head">
+          <div>
+            <div className="card-title">Individual Skills Gap</div>
+            <div className="card-sub">Missing skills from employee gap analysis</div>
+          </div>
+        </div>
+        
+        {isLoading ? (
+          <div style={{ padding: '9px 0', fontSize: '12px', color: 'var(--text3)' }}>Loading employee gaps...</div>
+        ) : employeeRows.length === 0 ? (
+          <div style={{ padding: '9px 0', fontSize: '12px', color: 'var(--text3)' }}>No employee gap details yet</div>
+        ) : employeeRows.map((employeeGap, index) => (
+          <div 
+            key={employeeGap.userId ?? index}
+            style={{ 
+              display: 'grid', 
+              gridTemplateColumns: '2fr 3fr 2fr 80px', 
+              gap: '8px', 
+              alignItems: 'center', 
+              padding: '9px 0',
+              borderBottom: index === employeeRows.length - 1 ? 'none' : '0.5px solid var(--border)'
+            }}
+          >
+            <div>
+              <div style={{ fontSize: '12px', fontWeight: '500' }}>Employee {employeeGap.userId}</div>
+              <div style={{ fontSize: '10px', color: 'var(--text3)' }}>{employeeGap.riskLevel || 'Gap'} risk</div>
+            </div>
+            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+              {(employeeGap.missingSkills || []).map((skill) => (
+                <span key={skill} className="risk-category">
+                  {skill}
+                </span>
+              ))}
+            </div>
+            <div style={{ fontSize: '11px', color: 'var(--text3)' }}>
+              {employeeGap.recommendation}
             </div>
             <button 
               className="btn btn-primary" 

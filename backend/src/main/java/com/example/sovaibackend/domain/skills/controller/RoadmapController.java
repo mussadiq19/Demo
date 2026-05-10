@@ -9,6 +9,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping({"/api/roadmap", "/api/roadmaps"})
 @RequiredArgsConstructor
@@ -20,6 +22,19 @@ public class RoadmapController {
     @PreAuthorize("hasAnyRole('COMPANY_ADMIN','ADMIN')")
     public ApiResponse<RoadmapResponse> generate(@PathVariable Long userId) {
         return ApiResponse.ok(roadmapService.generate(userId), "Roadmap generated to keep workforce future-ready");
+    }
+
+    @PostMapping("/regenerate")
+    @PreAuthorize("hasAnyRole('EMPLOYEE','COMPANY_ADMIN','ADMIN')")
+    public ApiResponse<RoadmapResponse> regenerate(@RequestBody Map<String, Long> request,
+                                                   Authentication authentication) {
+        Long userId = request.get("userId");
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        boolean isEmployee = principal.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_EMPLOYEE"));
+        if (isEmployee && !principal.getId().equals(userId)) {
+            throw new IllegalArgumentException("Employees can regenerate only their own roadmap");
+        }
+        return ApiResponse.ok(roadmapService.generate(userId), "Roadmap regenerated");
     }
 
     @GetMapping("/{userId}")

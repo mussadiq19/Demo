@@ -2,6 +2,7 @@ package com.example.sovaibackend.domain.company.service;
 
 import com.example.sovaibackend.common.exception.ResourceNotFoundException;
 import com.example.sovaibackend.domain.auth.repository.UserRepository;
+import com.example.sovaibackend.domain.company.dto.AiReadinessResponse;
 import com.example.sovaibackend.domain.company.dto.CompanyRequest;
 import com.example.sovaibackend.domain.company.dto.CompanyResponse;
 import com.example.sovaibackend.domain.company.dto.DashboardResponse;
@@ -11,6 +12,7 @@ import com.example.sovaibackend.domain.cache.entity.AiCache;
 import com.example.sovaibackend.domain.cache.repository.AiCacheRepository;
 import com.example.sovaibackend.domain.risk.entity.Risk;
 import com.example.sovaibackend.domain.risk.entity.RiskSeverity;
+import com.example.sovaibackend.domain.risk.entity.RiskStatus;
 import com.example.sovaibackend.domain.risk.repository.RiskRepository;
 import com.example.sovaibackend.domain.skills.repository.EmployeeSkillRepository;
 import com.example.sovaibackend.domain.skills.repository.RoadmapRepository;
@@ -71,6 +73,39 @@ public class CompanyServiceImpl implements CompanyService {
             latest != null ? latest.getDetectedAt().toString() : null,
             0,
             insightCache != null ? insightCache.getResponseJson() : null
+        );
+    }
+
+    @Override
+    public AiReadinessResponse calculateAiReadiness(Long companyId) {
+        int riskCount = riskRepository.countByCompanyIdAndStatus(companyId, RiskStatus.OPEN);
+        int gapPct = 0;
+        try {
+            Integer g = employeeSkillRepository.calculateGapPercentage(companyId);
+            gapPct = g != null ? g : 0;
+        } catch (Exception e) {
+            gapPct = 0;
+        }
+
+        int roadmapPct = 0;
+        try {
+            Integer r = roadmapRepository.calculateProgressPercentage(companyId);
+            roadmapPct = r != null ? r : 0;
+        } catch (Exception e) {
+            roadmapPct = 0;
+        }
+
+        int workforcePreparedness = 100 - gapPct;
+        int riskExposureScore = Math.min(riskCount * 10, 100);
+        String riskExposure = riskCount == 0 ? "Low"
+                : riskCount <= 3 ? "Medium" : "High";
+        int overall = (workforcePreparedness + roadmapPct
+                + (100 - riskExposureScore)) / 3;
+
+        return new AiReadinessResponse(
+                overall, 68, 74,
+                workforcePreparedness,
+                riskExposure
         );
     }
 

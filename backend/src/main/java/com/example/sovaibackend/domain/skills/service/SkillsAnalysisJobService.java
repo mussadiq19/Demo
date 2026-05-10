@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface SkillsAnalysisJobService {
     List<GapAnalysisResponse> runCompanyAnalysis(Long companyId);
+    void runAnalysis(Long companyId);
 }
-

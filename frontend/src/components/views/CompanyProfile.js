@@ -1,15 +1,49 @@
-import React from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useEffect, useState } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../../hooks/useAuth';
+import { useAiReadiness } from '../../hooks/useAiReadiness';
 import { companyService } from '../../services/companyService';
 
 const CompanyProfile = () => {
   const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const [form, setForm] = useState({
+    name: '',
+    industry: '',
+    size: '',
+    location: '',
+  });
   const { data: company } = useQuery({
     queryKey: ['company', user?.companyId],
     queryFn: () => companyService.getCompany(user.companyId),
     enabled: !!user?.companyId,
   });
+  const { data } = useAiReadiness();
+
+  useEffect(() => {
+    if (!company) return;
+    setForm({
+      name: company.name || '',
+      industry: company.industry || '',
+      size: company.size || '',
+      location: company.location || company.techStack || '',
+    });
+  }, [company]);
+
+  const updateMutation = useMutation({
+    mutationFn: () => companyService.updateCompany(user.companyId, form),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['company', user?.companyId] });
+      queryClient.invalidateQueries({ queryKey: ['ai-readiness', user?.companyId] });
+    },
+  });
+
+  const handleChange = (field) => (event) => {
+    setForm((current) => ({
+      ...current,
+      [field]: event.target.value,
+    }));
+  };
 
   return (
     <div className="profile-page">
@@ -31,23 +65,23 @@ const CompanyProfile = () => {
               <label>Company Name</label>
               <input
                 type="text"
-                value={company?.name || ''}
-                readOnly
+                value={form.name}
+                onChange={handleChange('name')}
                 className="input"
               />
             </div>
 
             <div className="form-group">
               <label>Industry</label>
-              <select className="input" value={company?.industry || ''} onChange={() => {}}>
-                <option value={company?.industry || ''}>{company?.industry || 'Not provided'}</option>
+              <select className="input" value={form.industry} onChange={handleChange('industry')}>
+                <option value={form.industry}>{form.industry || 'Not provided'}</option>
               </select>
             </div>
 
             <div className="form-group">
               <label>Company Size</label>
-              <select className="input" value={company?.size || ''} onChange={() => {}}>
-                <option value={company?.size || ''}>{company?.size || 'Not provided'}</option>
+              <select className="input" value={form.size} onChange={handleChange('size')}>
+                <option value={form.size}>{form.size || 'Not provided'}</option>
               </select>
             </div>
 
@@ -55,8 +89,8 @@ const CompanyProfile = () => {
               <label>Location</label>
               <input
                 type="text"
-                value={company?.techStack || ''}
-                readOnly
+                value={form.location}
+                onChange={handleChange('location')}
                 className="input"
               />
             </div>
@@ -66,7 +100,7 @@ const CompanyProfile = () => {
             <div className="section-title">AI Readiness</div>
 
             <div className="readiness-card">
-              <div className="readiness-score">82%</div>
+              <div className="readiness-score">{data?.overallScore ?? 0}%</div>
               <div className="readiness-label">
                 AI Transformation Readiness
               </div>
@@ -75,22 +109,22 @@ const CompanyProfile = () => {
             <div className="stat-list">
               <div className="stat-item">
                 <span>Automation Coverage</span>
-                <strong>68%</strong>
+                <strong>{data?.automationCoverage ?? 0}%</strong>
               </div>
 
               <div className="stat-item">
                 <span>AI Adoption</span>
-                <strong>74%</strong>
+                <strong>{data?.aiAdoption ?? 0}%</strong>
               </div>
 
               <div className="stat-item">
                 <span>Workforce Preparedness</span>
-                <strong>81%</strong>
+                <strong>{data?.workforcePreparedness ?? 0}%</strong>
               </div>
 
               <div className="stat-item">
                 <span>Risk Exposure</span>
-                <strong>Medium</strong>
+                <strong>{data?.riskExposure ?? ''}</strong>
               </div>
             </div>
           </div>
@@ -108,7 +142,13 @@ const CompanyProfile = () => {
         </div>
 
         <div className="profile-actions">
-          <button className="primary-btn">Save Changes</button>
+          <button
+            className="primary-btn"
+            onClick={() => updateMutation.mutate()}
+            disabled={!user?.companyId || updateMutation.isPending}
+          >
+            Save Changes
+          </button>
           <button className="secondary-btn">Cancel</button>
         </div>
       </div>

@@ -4,9 +4,18 @@ const persistAuth = (authData) => {
   if (!authData?.token) return;
 
   localStorage.setItem('token', authData.token);
-  localStorage.setItem('userId', authData.userId);
-  localStorage.setItem('userRole', authData.role);
+  if (authData.userId) localStorage.setItem('userId', authData.userId);
+  if (authData.role) localStorage.setItem('userRole', authData.role);
   localStorage.setItem('tokenExpiresAt', authData.expiresAt);
+};
+
+const persistUser = (user) => {
+  if (!user) return;
+
+  localStorage.setItem('authUser', JSON.stringify(user));
+  if (user.id) localStorage.setItem('userId', user.id);
+  if (user.role) localStorage.setItem('userRole', user.role);
+  if (user.companyId) localStorage.setItem('companyId', user.companyId);
 };
 
 const clearAuth = () => {
@@ -15,6 +24,7 @@ const clearAuth = () => {
   localStorage.removeItem('authUser');
   localStorage.removeItem('userId');
   localStorage.removeItem('userRole');
+  localStorage.removeItem('companyId');
   localStorage.removeItem('tokenExpiresAt');
 };
 
@@ -61,7 +71,9 @@ const AuthService = {
 
   getCurrentUser: async () => {
     const response = await axiosInstance.get('/auth/me');
-    return unwrap(response);
+    const user = unwrap(response);
+    persistUser(user);
+    return user;
   },
 
   logout: async () => {

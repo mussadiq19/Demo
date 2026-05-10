@@ -20,6 +20,18 @@ const decodeUserFromToken = (token, emailFallback) => {
   };
 };
 
+const normalizeUser = (user, emailFallback) => {
+  if (!user) return null;
+
+  return {
+    ...user,
+    id: user.id != null ? Number(user.id) : undefined,
+    email: user.email ?? emailFallback ?? '',
+    role: user.role,
+    companyId: user.companyId != null ? Number(user.companyId) : undefined,
+  };
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
@@ -27,7 +39,7 @@ export const AuthProvider = ({ children }) => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const initializeAuth = () => {
+    const initializeAuth = async () => {
       const storedToken = localStorage.getItem('token') || localStorage.getItem('authToken');
 
       if (storedToken) {
@@ -35,9 +47,9 @@ export const AuthProvider = ({ children }) => {
           localStorage.setItem('token', storedToken);
         }
         try {
-          const decodedUser = decodeUserFromToken(storedToken);
           setToken(storedToken);
-          setUser(decodedUser);
+          const currentUser = await AuthService.getCurrentUser();
+          setUser(normalizeUser(currentUser));
         } catch (err) {
           localStorage.removeItem('token');
           localStorage.removeItem('authToken');
@@ -56,9 +68,9 @@ export const AuthProvider = ({ children }) => {
     try {
       const authData = await AuthService.register(fullName, email, password, companyId);
       localStorage.setItem('userEmail', email);
-      const decodedUser = decodeUserFromToken(authData.token, email);
       setToken(authData.token);
-      setUser(decodedUser);
+      const currentUser = await AuthService.getCurrentUser();
+      setUser(normalizeUser(currentUser, email));
       return authData;
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message || 'Registration failed';
@@ -72,9 +84,10 @@ export const AuthProvider = ({ children }) => {
     try {
       const authData = await AuthService.login(email, password);
       localStorage.setItem('userEmail', email);
-      const decodedUser = decodeUserFromToken(authData.token, email);
       setToken(authData.token);
-      setUser(decodedUser);
+      const meResponse = await AuthService.getCurrentUser();
+      const user = normalizeUser(meResponse, email);
+      setUser(user);
       return authData;
     } catch (err) {
       const errorMessage = err.response?.data?.message || err.message || 'Login failed';

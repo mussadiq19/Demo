@@ -1,19 +1,24 @@
 import React from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../../hooks/useAuth';
+import { useRoadmap } from '../../hooks/useRoadmap';
 import { roadmapService } from '../../services/roadmapService';
 
 const Roadmap = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const { data: roadmap, isLoading } = useQuery({
-    queryKey: ['roadmap', user?.id],
-    queryFn: () => roadmapService.getRoadmap(user.id),
-    enabled: !!user?.id,
-  });
+  const { data: roadmap, isLoading } = useRoadmap();
 
   const completeMutation = useMutation({
     mutationFn: roadmapService.completeStep,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['roadmap', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+    },
+  });
+
+  const regenerateMutation = useMutation({
+    mutationFn: () => roadmapService.regenerate(user.id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['roadmap', user?.id] });
       queryClient.invalidateQueries({ queryKey: ['dashboard'] });
@@ -40,7 +45,7 @@ const Roadmap = () => {
         </div>
         <div className="scan-text">
           <div className="t1">Your personalised growth path — built to keep you ahead.</div>
-          <div className="t2">⚡ Powered by SovAI · User {user?.id ?? ''} · {roadmap?.title || 'Roadmap'} · Backend synced</div>
+          <div className="t2">⚡ Powered by Foresight AI · User {user?.id ?? ''} · {roadmap?.title || 'Roadmap'} · Backend synced</div>
         </div>
         <button 
           className="btn" 
@@ -51,6 +56,8 @@ const Roadmap = () => {
             fontSize: '11px', 
             padding: '6px 12px' 
           }}
+          onClick={() => regenerateMutation.mutate()}
+          disabled={!user?.id || regenerateMutation.isPending}
         >
           <span style={{ fontSize: '13px' }}>🔄</span>
           Regenerate
@@ -88,6 +95,16 @@ const Roadmap = () => {
         
         {isLoading ? (
           <div style={{ padding: '8px 0', fontSize: '12px', color: 'var(--text3)' }}>Loading roadmap...</div>
+        ) : !roadmapSteps || roadmapSteps.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-4xl mb-3">🗺️</p>
+            <p className="font-medium text-gray-600 text-base">
+              No roadmap steps yet
+            </p>
+            <p className="text-sm text-gray-400 mt-1">
+              Upload your skills data to generate your personalised roadmap
+            </p>
+          </div>
         ) : roadmapSteps.map((step, index) => {
           const current = step.id === firstIncompleteId;
           return (

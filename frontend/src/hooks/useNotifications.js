@@ -14,7 +14,7 @@ export function useNotifications() {
   const unreadCount = notifications.filter((n) => !n.read).length;
   const { mutate: markRead } = useMutation({
     mutationFn: notificationService.markRead,
-    onSuccess: () => queryClient.invalidateQueries(['notifications']),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['notifications'] }),
   });
   return { notifications, unreadCount, markRead, isLoading };
 }
